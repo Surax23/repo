@@ -13,6 +13,9 @@ class Auth extends CI_Controller {
 
 		$this->lang->load('auth');
 		$name = '';
+		$this->data['meta_k'] = 'Бла';
+		$this->data['meta_d'] = 'Бла';
+		$this->data['title'] = 'Бла';
 	}
 
 	// redirect if needed, otherwise display the user list

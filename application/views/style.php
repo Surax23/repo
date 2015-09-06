@@ -85,8 +85,17 @@ img.aligntop {
 	margin: 5px 0 20px 0;
 }
 
+input[type="input"] {
+	width: 350;
+}
+
 p {
 	margin-bottom: 1.5em;
+}
+
+textarea[name="text"] {
+	width: 350;
+	height: 200;
 }
 
 ul {

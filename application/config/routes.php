@@ -51,6 +51,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'news';
 $route['auth/login'] = 'auth/login';
+$route['news/add'] = 'news/add';
+$route['news/edit'] = 'news/edit';
+$route['news/app'] = 'news/app';
 $route['catalog'] = 'catalog';
 $route['panel'] = 'panel';
 $route['gamedetails'] = 'catalog/gamedetails';
