@@ -14,7 +14,7 @@ class Catalog extends CI_Controller {
 		$pageData['meta_d'] = 'Some shit';
 		$this->load->view('main', $pageData);
 	}
-	function gamedetails($gameid) {
+	public function gamedetails($gameid) {
 		$pageData['game'] = $this->Catalog_model->getGameDetails($gameid);
 		if ($pageData['game'] == false) {
 			$pageData['errDescription'] = "Игры не существует.";
@@ -23,5 +23,8 @@ class Catalog extends CI_Controller {
 		$pageData['meta_k'] = 'Some shit';
 		$pageData['meta_d'] = 'Some shit';
 		$this->load->view("details", $pageData);
+	}
+	public function addNewGame() {
+		//Blah
 	}
 }

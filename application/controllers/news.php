@@ -50,6 +50,11 @@ class News extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('title', 'Title', 'required');
 		$this->form_validation->set_rules('text', 'text', 'required');
+		
+		//$rules['title']	= "required|xss_clean";
+		//$rules['text']	= "required|xss_clean";
+		//$this->form_validation->set_rules($rules);
+		
 		$page['title'] = 'Rmaker &mdash; новости';
 		$page['meta_k'] = 'Some shit';
 		$page['meta_d'] = 'Some shit';
@@ -60,11 +65,11 @@ class News extends CI_Controller {
 			$this->load->view('edit', $page);
 		} else {
 			$this->News_model->updateNews($id);
+			$news = $this->News_model->getOneNews($id);
+			$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id']);
 			$page['success']=true;
-			//$this->load->view('edit', $page);
-			redirect(base_url().'index.php/news/edit/'.$id);
+			$this->load->view('edit', $page);
 		}
-		//$this->load->view('edit', $page);
 	}
 	public function delete($id) {
 		$what = $this->News_model->delete($id);

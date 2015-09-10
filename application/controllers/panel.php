@@ -12,7 +12,13 @@ class Panel extends CI_Controller {
 			$pageData['title'] = 'Some more shit';
 			$user = $this->ion_auth->user()->row();
 			$pageData['games'] = $this->Panel_model->getAllGames($user->username);
-			$this->load->view('panel', $pageData);
+			if ($this->Panel_model->getAllGames($user->username)===false) {
+				$pageData['error'] = true;
+				$this->load->view('panel', $pageData);
+			} else {
+				$pageData['error'] = false;
+				$this->load->view('panel', $pageData);
+			}
 		} else {
 			redirect(base_url(), 'refresh');
 		}

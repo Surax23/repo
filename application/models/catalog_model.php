@@ -23,4 +23,12 @@ class Catalog_model extends CI_Model {
 			}
 			return $gameData[0];
 		}
+		
+		public function addGame() {
+			//Blah
+		}
+		
+		public function updateGame($id) {
+			//Blah
+		}
 }
