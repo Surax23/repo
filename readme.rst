@@ -30,7 +30,12 @@ issues, as well as missing features.
 Installation
 ************
 
-There is no notes for installation.
+1. Install CI
+2. Install Ion Auth
+3. Extract all this files to CI folder
+4. Import database.sql into your database
+5. ...
+6. PROFIT!
 
 *******
 License
