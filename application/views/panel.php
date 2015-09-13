@@ -25,7 +25,8 @@
 					foreach ($games as $game) {
 						echo '<td>'.$game['title'].'</td>';
 						echo '<td>'.$game['status'].'</td>';
-						echo '<td><img height="16" alt="Редактировать" src="'.base_url().'icon/pencil.png"> <img height="16" alt="Удалить" src="'.base_url().'icon/delete.png"></td>';
+						echo '<td><a href="'.base_url().'index.php/catalog/edit/'.$game['id'].'"><img height="16" title="Редактировать" alt="Редактировать" src="'.base_url().'icon/pencil.png"></a> ';
+						echo ' <a href="'.base_url().'index.php/catalog/delete/'.$game['id'].'"><img height="16" title="Удалить" alt="Удалить" src="'.base_url().'icon/delete.png"></a></td>';
 					}
 				}
 			?>

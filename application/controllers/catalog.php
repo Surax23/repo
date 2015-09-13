@@ -33,62 +33,73 @@ class Catalog extends CI_Controller {
 		$this->load->view("details", $pageData);
 	}
 	public function add() {
-		$page['new']=true;
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$page['edit'] = array('title'=>'', 'annotation'=>'', 'id'=>'', 'status'=>'', 'maker'=>'');
-		$page['edit']['genre']=false;
-		$this->form_validation->set_rules('title', 'Название', 'required');
-		$this->form_validation->set_rules('annotation', 'Описание', 'required');
-		$this->form_validation->set_rules('genre[]', 'Жанр', 'required');
-		$this->form_validation->set_rules('maker[]', 'Движок', 'required');
-		$this->form_validation->set_rules('status[]', 'Статус', 'required');
-		$page['title'] = 'Rmaker &mdash; Игры &mdash; Добавление новой игры';
-		$page['meta_k'] = 'Some shit';
-		$page['meta_d'] = 'Some shit';
-		//$page['edit'] = array('title'=>'', 'text'=>'');
-		if ($this->form_validation->run() === FALSE) {
-			$page['success']=false;
-			$this->load->view('games/edit', $page);
+		if ( $this->ion_auth->logged_in() ) {
+			$page['new']=true;
+			$this->load->helper('form');
+			$this->load->library('form_validation');
+			$page['edit'] = array('title'=>'', 'annotation'=>'', 'id'=>'', 'status'=>'', 'maker'=>'');
+			$page['edit']['genre']=false;
+			$this->form_validation->set_rules('title', 'Название', 'required');
+			$this->form_validation->set_rules('annotation', 'Описание', 'required');
+			$this->form_validation->set_rules('genre[]', 'Жанр', 'required');
+			$this->form_validation->set_rules('maker[]', 'Движок', 'required');
+			$this->form_validation->set_rules('status[]', 'Статус', 'required');
+			$page['title'] = 'Rmaker &mdash; Игры &mdash; Добавление новой игры';
+			$page['meta_k'] = 'Some shit';
+			$page['meta_d'] = 'Some shit';
+			//$page['edit'] = array('title'=>'', 'text'=>'');
+			if ($this->form_validation->run() === FALSE) {
+				$page['success']=false;
+				$this->load->view('games/edit', $page);
+			} else {
+				$this->Catalog_model->add();
+				$page['success']=true;
+				$this->load->view('games/edit', $page);
+			}
 		} else {
-			$this->Catalog_model->add();
-			$page['success']=true;
-			$this->load->view('games/edit', $page);
+			redirect(base_url().'index.php/catalog');
 		}
 	}
 	
 	public function edit($gameid) {
-		$pageData['new']=false;
 		$game = $this->Catalog_model->getGameDetails($gameid);
-		$pageData['edit'] = array('title'=>$game['title'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
-		$pageData['edit']['genre']=explode(', ', $game['genre']);
-		//for
-		
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('title', 'Title', 'required');
-		$this->form_validation->set_rules('annotation', 'Annotation', 'required');
-		$pageData['title'] = 'Каталог игр &mdash; Редактирование &mdash; '.$game['title'];
-		$pageData['meta_k'] = 'Some shit';
-		$pageData['meta_d'] = 'Some shit';
-		if ($this->form_validation->run() === FALSE) {
-			$pageData['success']=false;
-			$this->load->view('games/edit', $pageData);
-		} else {
-			$pageData['success']=true;
-			$this->Catalog_model->update($gameid);
-			$pageData['info'] = $this->input->post('status');
-			$game = $this->Catalog_model->getGameDetails($gameid);
+		$user = $this->ion_auth->user()->row();
+		if ($this->ion_auth->is_admin() || $games['author']=$user->username) {
+			$pageData['new']=false;
 			$pageData['edit'] = array('title'=>$game['title'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
 			$pageData['edit']['genre']=explode(', ', $game['genre']);
-			$this->load->view('games/edit', $pageData);
+		
+			$this->load->helper('form');
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('title', 'Title', 'required');
+			$this->form_validation->set_rules('annotation', 'Annotation', 'required');
+			$pageData['title'] = 'Каталог игр &mdash; Редактирование &mdash; '.$game['title'];
+			$pageData['meta_k'] = 'Some shit';
+			$pageData['meta_d'] = 'Some shit';
+			if ($this->form_validation->run() === FALSE) {
+				$pageData['success']=false;
+				$this->load->view('games/edit', $pageData);
+			} else {
+				$pageData['success']=true;
+				$this->Catalog_model->update($gameid);
+				$pageData['info'] = $this->input->post('status');
+				$game = $this->Catalog_model->getGameDetails($gameid);
+				$pageData['edit'] = array('title'=>$game['title'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
+				$pageData['edit']['genre']=explode(', ', $game['genre']);
+				$this->load->view('games/edit', $pageData);
+			}
+		} else {
+		redirect(base_url());
 		}
-		//$this->load->view('games/edit', $pageData);
 	}
 	public function delete($id) {
-		$what = $this->Catalog_model->delete($id);
-		if ($what) {
-			redirect(base_url().'index.php/catalog');
+		if ($this->ion_auth->is_admin()) {
+			$what = $this->Catalog_model->delete($id);
+			if ($what) {
+				redirect(base_url().'index.php/catalog');
+			}
+		} else {
+			redirect(base_url());
 		}
 	}
 }

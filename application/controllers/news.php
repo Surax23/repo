@@ -59,45 +59,62 @@ class News extends CI_Controller {
 		$page['meta_k'] = 'Some shit';
 		$page['meta_d'] = 'Some shit';
 		$news = $this->News_model->getOneNews($id);
-		$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id']);
-		if ($this->form_validation->run() === FALSE) {
-			$page['success']=false;
-			$this->load->view('edit', $page);
-		} else {
-			$this->News_model->updateNews($id);
-			$news = $this->News_model->getOneNews($id);
+		$user = $this->ion_auth->user()->row();
+		if ($this->ion_auth->is_admin() || $news['author']=$user->username) {
 			$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id']);
-			$page['success']=true;
-			$this->load->view('edit', $page);
+			if ($this->form_validation->run() === FALSE) {
+				$page['success']=false;
+				$this->load->view('edit', $page);
+			} else {
+				$this->News_model->updateNews($id);
+				$news = $this->News_model->getOneNews($id);
+				$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id']);
+				$page['success']=true;
+				$this->load->view('edit', $page);
+			}
+		} else {
+			redirect(base_url());
 		}
 	}
 	public function delete($id) {
-		$what = $this->News_model->delete($id);
-		if ($what) {
+		if ($this->ion_auth->is_admin()) {
+			$what = $this->News_model->delete($id);
+			if ($what) {
+				redirect(base_url());
+			}
+		} else {
 			redirect(base_url());
 		}
 	}
 	public function approve($id) {
-		$this->News_model->approve($id);
-		redirect(base_url().'index.php/news/app');
+		if ($this->ion_auth->is_admin()) {
+			$this->News_model->approve($id);
+			redirect(base_url().'index.php/news/app');
+		} else {
+			redirect(base_url());
+		}
 	}
 	public function app() {
-		$this->load->library('pagination');
-		$config['base_url'] = base_url().'index.php/news/app';
-		$this->db->like(array('approved'=>'0'));
-		$this->db->from('news');
-		$config['total_rows'] = $this->db->count_all_results(); //$page['news'];
-		$config['per_page'] = 5;
-		$this->pagination->initialize($config);
-		$page['pagination'] = $this->pagination->create_links();
+		if ($this->ion_auth->is_admin()) {
+			$this->load->library('pagination');
+			$config['base_url'] = base_url().'index.php/news/app';
+			$this->db->like(array('approved'=>'0'));
+			$this->db->from('news');
+			$config['total_rows'] = $this->db->count_all_results(); //$page['news'];
+			$config['per_page'] = 5;
+			$this->pagination->initialize($config);
+			$page['pagination'] = $this->pagination->create_links();
 		
-		$page['news'] = $this->News_model->notApproved($config['per_page'], $this->uri->segment(3));
-		if ($page['news'] == false) {
-			$page['errDescription'] = "Новостей нет.";
+			$page['news'] = $this->News_model->notApproved($config['per_page'], $this->uri->segment(3));
+			if ($page['news'] == false) {
+				$page['errDescription'] = "Новостей нет.";
+			}
+			$page['title'] = 'Rmaker &mdash; новости';
+			$page['meta_k'] = 'Some shit';
+			$page['meta_d'] = 'Some shit';
+			$this->load->view('app', $page);
+		} else {
+			redirect(base_url());
 		}
-		$page['title'] = 'Rmaker &mdash; новости';
-		$page['meta_k'] = 'Some shit';
-		$page['meta_d'] = 'Some shit';
-		$this->load->view('app', $page);
 	}
 }
