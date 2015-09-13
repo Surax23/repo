@@ -34,6 +34,7 @@ Installation
 2. Install Ion Auth
 3. Extract all this files to CI folder
 4. Import database.sql into your database
+5. Edit 'application/config/database.php' with your's.
 5. ...
 6. PROFIT!
 
