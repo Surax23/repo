@@ -8,24 +8,13 @@
 		<?php echo $this->load->view('style', '', TRUE); 
 			$this->load->helper('url');
 		?>
-		<script>
-		$(document).ready(function(){
-			PopUpHide();
-		});
-		function PopUpShow(){
-			$("#popup1").show();
-		}
-		function PopUpHide(){
-			$("#popup1").hide();
-		}
-		</script>
 	</head>
 	<body>
 		<div id="wrapper">
 			<div id="header">
 				<div id="logo">
 					<h1><a href="<?php echo site_url(); ?>">RMaker
-					<img class='alignleft' src='http://rmaker.ru/forum/styles/basic/theme/images/logo.png' alt=''></a></h1>
+					<img class='alignleft' src="<?php echo base_url().'/forum/styles/basic/theme/images/logo.png'; ?>" alt=''></a></h1>
 				</div>
 				<div id="menu">
 					<ul>

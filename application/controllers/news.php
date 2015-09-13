@@ -7,7 +7,7 @@ class News extends CI_Controller {
 	public function index() {
 		
 		$this->load->library('pagination');
-		$config['base_url'] = 'http://localhost/index.php/news/index';
+		$config['base_url'] = base_url().'index.php/news/index';
 		$this->db->like(array('approved'=>'1'));
 		$this->db->from('news');
 		$config['total_rows'] = $this->db->count_all_results(); //$page['news'];
@@ -83,7 +83,7 @@ class News extends CI_Controller {
 	}
 	public function app() {
 		$this->load->library('pagination');
-		$config['base_url'] = 'http://localhost/index.php/news/index';
+		$config['base_url'] = base_url().'index.php/news/app';
 		$this->db->like(array('approved'=>'0'));
 		$this->db->from('news');
 		$config['total_rows'] = $this->db->count_all_results(); //$page['news'];

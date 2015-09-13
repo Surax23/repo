@@ -51,7 +51,7 @@ class News_model extends CI_Model {
 			$user = $this->ion_auth->user()->row();
 			$data = array(
 					'title' => $this->input->post('title'),
-					'author' => $user->username,
+					//'author' => $user->username,
 					'text' => $this->input->post('text')
 				);
 			if ($this->ion_auth->is_admin()) {

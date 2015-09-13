@@ -41,6 +41,10 @@ table, tr, td {
 	padding: 15 15 15 15;
 }
 
+#game table {
+	border: solid 0px;
+}
+
 td {
 	width: 230;
 }
@@ -96,6 +100,11 @@ p {
 textarea[name="text"] {
 	width: 350;
 	height: 200;
+}
+
+textarea[name="annotation"] {
+	width: 550;
+	height: 300;
 }
 
 ul {

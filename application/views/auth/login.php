@@ -1,4 +1,8 @@
-<h1><?php echo lang('login_heading');?></h1>
+<?php
+	$this->load->view('header');
+?>
+
+<h2><?php echo lang('login_heading');?></h2>
 <p><?php echo lang('login_subheading');?></p>
 
 <div id="infoMessage"><?php echo $message;?></div>
@@ -6,17 +10,17 @@
 <?php echo form_open("auth/login");?>
 
   <p>
-    <?php echo lang('login_identity_label', 'identity');?>
+    <?php echo lang('login_identity_label', 'identity');?><br />
     <?php echo form_input($identity);?>
   </p>
 
   <p>
-    <?php echo lang('login_password_label', 'password');?>
+    <?php echo lang('login_password_label', 'password');?><br />
     <?php echo form_input($password);?>
   </p>
 
   <p>
-    <?php echo lang('login_remember_label', 'remember');?>
+    <?php echo lang('login_remember_label', 'remember');?><br />
     <?php echo form_checkbox('remember', '1', FALSE, 'id="remember"');?>
   </p>
 
@@ -26,3 +30,7 @@
 <?php echo form_close();?>
 
 <p><a href="forgot_password"><?php echo lang('login_forgot_password');?></a></p>
+
+<?php
+	$this->load->view('footer');
+?>

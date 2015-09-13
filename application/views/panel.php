@@ -13,7 +13,7 @@
 		}
 		echo '<hr /><p></p>';
 	?>
-	<p><a href="#">>> Добавить игру</a></p>
+	<p><a href="<?php echo base_url().'index.php/catalog/add'; ?>">>> Добавить игру</a></p>
 	<div>
 		<table>
 			<tr><th>Игра</th><th>Статус</th><th>Действия</th></tr>
