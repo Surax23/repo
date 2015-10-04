@@ -10,6 +10,7 @@
 		echo "<div class='games'><div id='news'>";
 		echo "<p>>> Автор: ".$game['author']." || Движок: ".$game['maker']." || Жанр: ".$game['genre']." || Статус: ".$game['status']."</p>";
 		echo "<p>Описание<br /> ".$game['annotation']."</p>";
+		echo "<p><a href='".base_url().'index.php/catalog/download/'.$game['id']."'><img src='".base_url()."/icon/button.png'></a></p>";
 		echo "</div></div>";
 		}
 	?>

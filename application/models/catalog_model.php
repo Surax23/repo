@@ -24,7 +24,7 @@ class Catalog_model extends CI_Model {
 			return $gameData[0];
 		}
 		
-		public function add() {
+		public function add($file) {
 			$user = $this->ion_auth->user()->row();
 			$data = array(
 					'title' => $this->input->post('title'),
@@ -32,7 +32,7 @@ class Catalog_model extends CI_Model {
 					'annotation' => $this->input->post('annotation'),
 					'maker' => $this->input->post('maker')['0'],
 					'status' => $this->input->post('status')['0'],
-					//'genre' => $this->input->post('genre')
+					'file' => $file
 				);
 			$data['genre']=null;
 			$data['genre']=$this->input->post('genre')['0'];

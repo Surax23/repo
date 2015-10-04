@@ -3,6 +3,7 @@ class Catalog extends CI_Controller {
     public function Catalog() {
 		parent::__construct();
 		$this->load->model('Catalog_model');
+		$this->load->library('ftp');
     }
 	public function index() {
 		$pageData['title'] = 'Каталог игр &mdash; главная';
@@ -47,14 +48,37 @@ class Catalog extends CI_Controller {
 			$page['title'] = 'Rmaker &mdash; Игры &mdash; Добавление новой игры';
 			$page['meta_k'] = 'Some shit';
 			$page['meta_d'] = 'Some shit';
+			
+		
 			//$page['edit'] = array('title'=>'', 'text'=>'');
 			if ($this->form_validation->run() === FALSE) {
 				$page['success']=false;
 				$this->load->view('games/edit', $page);
 			} else {
-				$this->Catalog_model->add();
-				$page['success']=true;
-				$this->load->view('games/edit', $page);
+				//Загрузка файла
+				$user = $this->ion_auth->user()->row();
+				$path = './users/'.$user->username.'/';
+				if (!is_dir($path)) {
+					mkdir($path, 0777, TRUE);
+				}
+				$config['upload_path'] = $path;
+				$config['allowed_types'] = 'rar|zip';
+				$config['encrypt_name'] = true;
+				//$config['max_size']	= '0';
+				$this->load->library('upload', $config);
+				if ( !$this->upload->do_upload()) {
+					$error = array('error' => $this->upload->display_errors());
+					echo 'FUCK YOU!';
+					print_r($error);
+					//$this->load->view('upload_form', $error);
+				} else {
+					//$data = $this->upload->data();
+					$this->Catalog_model->add($path.$this->upload->data()['file_name']);
+					$page['success']=true;
+					$this->load->view('games/edit', $page);
+					//$this->load->view('upload_success', $data);
+				}
+				
 			}
 		} else {
 			redirect(base_url().'index.php/catalog');
@@ -71,8 +95,8 @@ class Catalog extends CI_Controller {
 		
 			$this->load->helper('form');
 			$this->load->library('form_validation');
-			$this->form_validation->set_rules('title', 'Title', 'required');
-			$this->form_validation->set_rules('annotation', 'Annotation', 'required');
+			$this->form_validation->set_rules('title', 'Название', 'required');
+			$this->form_validation->set_rules('annotation', 'Описание', 'required');
 			$pageData['title'] = 'Каталог игр &mdash; Редактирование &mdash; '.$game['title'];
 			$pageData['meta_k'] = 'Some shit';
 			$pageData['meta_d'] = 'Some shit';
@@ -93,13 +117,21 @@ class Catalog extends CI_Controller {
 		}
 	}
 	public function delete($id) {
-		if ($this->ion_auth->is_admin()) {
+		$game = $this->Catalog_model->getGameDetails($id);
+		$user = $this->ion_auth->user()->row();
+		if ($this->ion_auth->is_admin() || $games['author']=$user->username) {
 			$what = $this->Catalog_model->delete($id);
 			if ($what) {
-				redirect(base_url().'index.php/catalog');
+				redirect(base_url().'index.php/panel');
 			}
 		} else {
-			redirect(base_url());
+			redirect(base_url().'index.php/panel');
 		}
+	}
+	
+	public function download($id) {
+		$this->load->helper('download');
+		$game = $this->Catalog_model->getGameDetails($id);
+		force_download($game['title'].'.'.end(explode(".", $game['file'])), file_get_contents($game['file']));
 	}
 }
