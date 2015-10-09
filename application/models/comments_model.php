@@ -7,6 +7,6 @@ class Catalog_model extends CI_Model {
     }
 	
 	public function getComments($id) {
-	
+	  //d;lkfjg
 	}
 }

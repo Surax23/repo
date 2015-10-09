@@ -8,7 +8,7 @@
 	if (($success)&&($new===true)) {
 	echo '<p>Игра успешно добавлена!</p>';
 	} else if ($success) {
-	echo '<p>Игра успешно обновлена!</p>';
+	echo '<p>Игра успешно обновлена!</p>'; //dfkjgshdf
 	}
 ?>
 
