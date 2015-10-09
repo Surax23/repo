@@ -3,7 +3,6 @@ class Catalog extends CI_Controller {
     public function Catalog() {
 		parent::__construct();
 		$this->load->model('Catalog_model');
-		$this->load->library('ftp');
     }
 	public function index() {
 		$pageData['title'] = 'Каталог игр &mdash; главная';
