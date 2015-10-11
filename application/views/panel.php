@@ -17,16 +17,17 @@
 	<div>
 		<table>
 			<tr><th>Игра</th><th>Статус</th><th>Действия</th></tr>
-			
 			<?php
 				if ($error) {
 					echo '<tr><td>Игры отсутствуют</td><td></td><td></td>';
 				} else {
 					foreach ($games as $game) {
-						echo '<tr><td>'.$game['title'].'</td>';
+						echo '<tr><td><a href="'.base_url().'index.php/catalog/gamedetails/'.$game['id'].'">'.$game['title'].'</a></td>';
 						echo '<td>'.$game['status'].'</td>';
 						echo '<td><a href="'.base_url().'index.php/catalog/edit/'.$game['id'].'"><img height="16" title="Редактировать" alt="Редактировать" src="'.base_url().'icon/pencil.png"></a> ';
-						echo ' <a href="'.base_url().'index.php/catalog/delete/'.$game['id'].'"><img height="16" title="Удалить" alt="Удалить" src="'.base_url().'icon/delete.png"></a></td></tr>';
+						echo '<a href="'.base_url().'index.php/catalog/upload/'.$game['id'].'"><img height="16" title="Загрузить файл" alt="Загрузить файл" src="'.base_url().'icon/download.png"></a> ';
+						echo '<a href="#"><img height="16" title="Загрузить скриншоты" alt="Загрузить скриншоты" src="'.base_url().'icon/image.png"></a> ';
+						echo ' <a href="'.base_url().'index.php/catalog/delete/'.$game['id'].'" onClick="return window.confirm(\'Вы действительно хотите удалить запись об игре и связанные с ней файлы?\')"><img height="16" title="Удалить" alt="Удалить" src="'.base_url().'icon/delete.png"></a></td></tr>';
 					}
 				}
 			?>

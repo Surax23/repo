@@ -97,6 +97,11 @@ p {
 	margin-bottom: 1.5em;
 }
 
+textarea[name="comment"] {
+	width: 500;
+	height: 150;
+}
+
 textarea[name="text"] {
 	width: 350;
 	height: 200;
@@ -158,6 +163,13 @@ a {
 	padding: 0;
 	width: 840px;
 	margin: 0 0 0 65px;
+}
+
+.comments {
+	border-bottom: 1px solid rgb(90,100,102);
+	border-right: 1px solid rgb(90,100,102);
+	margin-bottom: .5em;
+	padding-left: 5px;
 }
 
 #footer {

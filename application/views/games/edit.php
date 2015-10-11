@@ -2,7 +2,14 @@
 	$this->load->view('header');
 ?>
 
-<h2>Добавить игру</h2>
+<?php
+	if ($new===true) {
+		echo '<h2>Добавить игру</h2>';
+	} else {
+		echo '<h2>Обновить игру</h2>';
+	}
+?>
+
 <div class="games">
 <?php echo validation_errors(); 
 	if (($success)&&($new===true)) {
@@ -11,10 +18,10 @@
 	echo '<p>Игра успешно обновлена!</p>';
 	}
 ?>
-
+<p><a href="<?php echo base_url().'index.php/panel'; ?>">>> Вернуться в панель управления</a></p>
 <?php 
 	if ($new===true) {
-		echo form_open_multipart('catalog/add');
+		echo form_open('catalog/add');
 	} else {
 		echo form_open('catalog/edit/'.$edit['id']);
 	}
@@ -22,6 +29,10 @@
 ?>
     <p><label for="title">Название</label><br />
     <input type="input" name="title" value="<?php echo $edit['title']; ?>" /></p>
+	<?php if ($this->ion_auth->is_admin()) {
+			echo '<p><label for="author">Автор</label><br /><input type="input" name="author" value="'.$edit['author'].'" /></p>';
+		  }
+	?>
 	<table id="game">
 	<tr><td>
 	<p><label for="title">Статус</label></p>
@@ -263,9 +274,6 @@
 
     <label for="text">Описание</label><br />
     <textarea name="annotation" ><?php echo $edit['annotation']; ?></textarea><br />
-	<br />
-	<label for="text">Файл</label><br />
-	<p><input type="file" name="userfile" size="20" /></p>
 	<br />
     <input type="submit" name="submit" value="<?php if ($new===true) { echo 'Добавить игру'; } else { echo 'Обновить игру'; } ?>" />
 
