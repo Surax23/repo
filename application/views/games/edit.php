@@ -8,7 +8,7 @@
 	if (($success)&&($new===true)) {
 	echo '<p>Игра успешно добавлена!</p>';
 	} else if ($success) {
-	echo '<p>Игра успешно обновлена!</p>'; //dfkjgshdf
+	echo '<p>Игра успешно обновлена!</p>';
 	}
 ?>
 
@@ -96,162 +96,162 @@
 	<label for="title">Жанр</label></p><p>
 	<p><select width="250" size="5" multiple name="genre[]">
 		<?php
-		if (array_search('action', $edit['genre'])==false) {
+		if (array_search('action', $edit['genre'])===false) {
 			echo '<option value="action">action</option>';
 		} else {
 			echo '<option selected value="action">action</option>';
 		}
-		if (array_search('приключения', $edit['genre'])==false) {
+		if (array_search('приключения', $edit['genre'])===false) {
 			echo '<option value="приключения">приключения</option>';
 		} else {
 			echo '<option selected value="приключения">приключения</option>';
 		}
-		if (array_search('аркада', $edit['genre'])==false) {
+		if (array_search('аркада', $edit['genre'])===false) {
 			echo '<option value="аркада">аркада</option>';
 		} else {
 			echo '<option selected value="аркада">аркада</option>';
 		}
-		if (array_search('юмористическая', $edit['genre'])==false) {
+		if (array_search('юмористическая', $edit['genre'])===false) {
 			echo '<option value="юмористическая">юмористическая</option>';
 		} else {
 			echo '<option selected value="юмористическая">юмористическая</option>';
 		}
-		if (array_search('киберпанк', $edit['genre'])==false) {
+		if (array_search('киберпанк', $edit['genre'])===false) {
 			echo '<option value="киберпанк">киберпанк</option>';
 		} else {
 			echo '<option selected value="киберпанк">киберпанк</option>';
 		}
-		if (array_search('нуар', $edit['genre'])==false) {
+		if (array_search('нуар', $edit['genre'])===false) {
 			echo '<option value="нуар">нуар</option>';
 		} else {
 			echo '<option selected value="нуар">нуар</option>';
 		}
-		if (array_search('исследование пещер', $edit['genre'])==false) {
+		if (array_search('исследование пещер', $edit['genre'])===false) {
 			echo '<option value="исследование пещер">исследование пещер</option>';
 		} else {
 			echo '<option selected value="исследование пещер">исследование пещер</option>';
 		}
-		if (array_search('фэнтэзи', $edit['genre'])==false) {
+		if (array_search('фэнтэзи', $edit['genre'])===false) {
 			echo '<option value="фэнтэзи">фэнтэзи</option>';
 		} else {
 			echo '<option selected value="фэнтэзи">фэнтэзи</option>';
 		}
-		if (array_search('драки', $edit['genre'])==false) {
+		if (array_search('драки', $edit['genre'])===false) {
 			echo '<option value="драки">драки</option>';
 		} else {
 			echo '<option selected value="драки">драки</option>';
 		}
-		if (array_search('футуризм', $edit['genre'])==false) {
+		if (array_search('футуризм', $edit['genre'])===false) {
 			echo '<option value="футуризм">футуризм</option>';
 		} else {
 			echo '<option selected value="футуризм">футуризм</option>';
 		}
-		if (array_search('историческое', $edit['genre'])==false) {
+		if (array_search('историческое', $edit['genre'])===false) {
 			echo '<option value="историческое">историческое</option>';
 		} else {
 			echo '<option selected value="историческое">историческое</option>';
 		}
-		if (array_search('ужасы', $edit['genre'])==false) {
+		if (array_search('ужасы', $edit['genre'])===false) {
 			echo '<option value="ужасы">ужасы</option>';
 		} else {
 			echo '<option selected value="ужасы">ужасы</option>';
 		}
-		if (array_search('современное', $edit['genre'])==false) {
+		if (array_search('современное', $edit['genre'])===false) {
 			echo '<option value="современное">современное</option>';
 		} else {
 			echo '<option selected value="современное">современное</option>';
 		}
-		if (array_search('многопользовательское', $edit['genre'])==false) {
+		if (array_search('многопользовательское', $edit['genre'])===false) {
 			echo '<option value="многопользовательское">многопользовательское</option>';
 		} else {
 			echo '<option selected value="многопользовательское">многопользовательское</option>';
 		}
-		if (array_search('музыкальное', $edit['genre'])==false) {
+		if (array_search('музыкальное', $edit['genre'])===false) {
 			echo '<option value="музыкальное">музыкальное</option>';
 		} else {
 			echo '<option selected value="музыкальное">музыкальное</option>';
 		}
-		if (array_search('мистическое', $edit['genre'])==false) {
+		if (array_search('мистическое', $edit['genre'])===false) {
 			echo '<option value="мистическое">мистическое</option>';
 		} else {
 			echo '<option selected value="мистическое">мистическое</option>';
 		}
-		if (array_search('старая школа', $edit['genre'])==false) {
+		if (array_search('старая школа', $edit['genre'])===false) {
 			echo '<option value="старая школа">старая школа</option>';
 		} else {
 			echo '<option selected value="старая школа">старая школа</option>';
 		}
-		if (array_search('платформер', $edit['genre'])==false) {
+		if (array_search('платформер', $edit['genre'])===false) {
 			echo '<option value="платформер">платформер</option>';
 		} else {
 			echo '<option selected value="платформер">платформер</option>';
 		}
-		if (array_search('постапокалипсис', $edit['genre'])==false) {
+		if (array_search('постапокалипсис', $edit['genre'])===false) {
 			echo '<option value="постапокалипсис">постапокалипсис</option>';
 		} else {
 			echo '<option selected value="постапокалипсис">постапокалипсис</option>';
 		}
-		if (array_search('паззл', $edit['genre'])==false) {
+		if (array_search('паззл', $edit['genre'])===false) {
 			echo '<option value="паззл">паззл</option>';
 		} else {
 			echo '<option selected value="паззл">паззл</option>';
 		}
-		if (array_search('ролевая', $edit['genre'])==false) {
+		if (array_search('ролевая', $edit['genre'])===false) {
 			echo '<option value="ролевая">ролевая</option>';
 		} else {
 			echo '<option selected value="ролевая">ролевая</option>';
 		}
-		if (array_search('научное', $edit['genre'])==false) {
+		if (array_search('научное', $edit['genre'])===false) {
 			echo '<option value="научное">научное</option>';
 		} else {
 			echo '<option selected value="научное">научное</option>';
 		}
-		if (array_search('стрелялка', $edit['genre'])==false) {
+		if (array_search('стрелялка', $edit['genre'])===false) {
 			echo '<option value="стрелялка">стрелялка</option>';
 		} else {
 			echo '<option selected value="стрелялка">стрелялка</option>';
 		}
-		if (array_search('вид сбоку', $edit['genre'])==false) {
+		if (array_search('вид сбоку', $edit['genre'])===false) {
 			echo '<option value="вид сбоку">вид сбоку</option>';
 		} else {
 			echo '<option selected value="вид сбоку">вид сбоку</option>';
 		}
-		if (array_search('симулятор', $edit['genre'])==false) {
+		if (array_search('симулятор', $edit['genre'])===false) {
 			echo '<option value="симулятор">симулятор</option>';
 		} else {
 			echo '<option selected value="симулятор">симулятор</option>';
 		}
-		if (array_search('космическое', $edit['genre'])==false) {
+		if (array_search('космическое', $edit['genre'])===false) {
 			echo '<option value="космическое">космическое</option>';
 		} else {
 			echo '<option selected value="космическое">космическое</option>';
 		}
-		if (array_search('стимпанк', $edit['genre'])==false) {
+		if (array_search('стимпанк', $edit['genre'])===false) {
 			echo '<option value="стимпанк">стимпанк</option>';
 		} else {
 			echo '<option selected value="стимпанк">стимпанк</option>';
 		}
-		if (array_search('стратегия', $edit['genre'])==false) {
+		if (array_search('стратегия', $edit['genre'])===false) {
 			echo '<option value="стратегия">стратегия</option>';
 		} else {
 			echo '<option selected value="стратегия">стратегия</option>';
 		}
-		if (array_search('тактика', $edit['genre'])==false) {
+		if (array_search('тактика', $edit['genre'])===false) {
 			echo '<option value="тактика">тактика</option>';
 		} else {
 			echo '<option selected value="тактика">тактика</option>';
 		}
-		if (array_search('текстовая', $edit['genre'])==false) {
+		if (array_search('текстовая', $edit['genre'])===false) {
 			echo '<option value="текстовая">текстовая</option>';
 		} else {
 			echo '<option selected value="текстовая">текстовая</option>';
 		}
-		if (array_search('визуальная новелла', $edit['genre'])==false) {
+		if (array_search('визуальная новелла', $edit['genre'])===false) {
 			echo '<option value="визуальная новелла">визуальная новелла</option>';
 		} else {
 			echo '<option selected value="визуальная новелла">визуальная новелла</option>';
 		}
-		if (array_search('вестерн', $edit['genre'])==false) {
+		if (array_search('вестерн', $edit['genre'])===false) {
 			echo '<option value="вестерн">вестерн</option>';
 		} else {
 			echo '<option selected value="вестерн">вестерн</option>';

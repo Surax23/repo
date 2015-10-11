@@ -40,6 +40,7 @@ class News_model extends CI_Model {
 					'author' => $user->username,
 					'text' => $this->input->post('text')
 				);
+			$data['text'] = strip_tags($data['text'], '<b><i><u><s>');
 			if ($this->ion_auth->is_admin()) {
 				$data['approved']='1';
 			} else {
@@ -54,6 +55,7 @@ class News_model extends CI_Model {
 					//'author' => $user->username,
 					'text' => $this->input->post('text')
 				);
+			$data['text'] = strip_tags($data['text'], '<b><i><u><s>');
 			if ($this->ion_auth->is_admin()) {
 				$data['approved']='1';
 			} else {

@@ -34,6 +34,7 @@ class Catalog_model extends CI_Model {
 					'status' => $this->input->post('status')['0'],
 					'file' => $file
 				);
+			$data['annotation']=strip_tags($data['annotation'], '<b><i><u><s>');
 			$data['genre']=null;
 			$data['genre']=$this->input->post('genre')['0'];
 			for($i=1;$i<count($this->input->post('genre'));$i++) {
@@ -44,14 +45,17 @@ class Catalog_model extends CI_Model {
 		
 		public function update($id) {
 			//$user = $this->ion_auth->user()->row();
+			//$data['annotation']=strip_tags($this->input->post('annotation')['0'], '<b><i><u><s>');
 			$data = array(
 					'title' => $this->input->post('title'),
 					//'author' => $user->username,
 					'annotation' => $this->input->post('annotation'),
 					'maker' => $this->input->post('maker')['0'],
-					'status' => $this->input->post('status')['0']
+					'status' => $this->input->post('status')['0'],
 					//'genre' => $this->input->post('genre')
+					//'file' => $file
 				);
+			$data['annotation']=strip_tags($data['annotation'], '<b><i><u><s>');
 			$data['genre']=null;
 			$data['genre']=$this->input->post('genre')['0'];
 			for($i=1;$i<count($this->input->post('genre'));$i++) {

@@ -91,7 +91,6 @@ class Catalog extends CI_Controller {
 			$pageData['new']=false;
 			$pageData['edit'] = array('title'=>$game['title'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
 			$pageData['edit']['genre']=explode(', ', $game['genre']);
-		
 			$this->load->helper('form');
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('title', 'Название', 'required');
@@ -101,6 +100,10 @@ class Catalog extends CI_Controller {
 			$pageData['meta_d'] = 'Some shit';
 			if ($this->form_validation->run() === FALSE) {
 				$pageData['success']=false;
+				$game = $this->Catalog_model->getGameDetails($gameid);
+				$pageData['edit'] = array('title'=>$game['title'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
+				$pageData['edit']['genre']=explode(', ', $game['genre']);
+				//print_r($pageData['edit']['genre']);
 				$this->load->view('games/edit', $pageData);
 			} else {
 				$pageData['success']=true;
