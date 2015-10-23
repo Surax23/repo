@@ -1,7 +1,6 @@
 <?php
 	$this->load->view('header');
 ?>
-<!-- <div id="search">Поиск?<br>Поиск?<br>Поиск?<br>Поиск?<br></div> -->
 <h2>Каталог игр</h2>
 <div class="games"><div id="news">
 	<?php
@@ -9,7 +8,6 @@
 			echo "<h3>".$errDescription."</h3>";
 		}
 		else {
-			//$games = array_reverse($games, true);
 			foreach ($games as $game) {
 				$arr_tmp = explode(', ', $game['images']);
 				$image = $arr_tmp['0'];

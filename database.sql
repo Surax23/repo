@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 13 2015 г., 16:14
+-- Время создания: Окт 24 2015 г., 00:21
 -- Версия сервера: 5.6.15-log
 -- Версия PHP: 5.5.8
 
@@ -29,11 +29,105 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `game_id` int(11) NOT NULL,
-  `author_id` int(11) NOT NULL,
+  `author` varchar(100) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+
+--
+-- Дамп данных таблицы `comments`
+--
+
+INSERT INTO `comments` (`id`, `game_id`, `author`, `date`, `comment`) VALUES
+(11, 46, 'Syrax', '2015-10-12 14:51:03', 'Привет, Антберг!\r\nКлевая игра!');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `forum_cat`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_cat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Дамп данных таблицы `forum_cat`
+--
+
+INSERT INTO `forum_cat` (`id`, `name`, `description`) VALUES
+(1, 'Общий', ''),
+(2, 'RPG Maker', ''),
+(3, 'Архив', '');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `forum_forum`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_forum` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  `cat_id` int(11) NOT NULL,
+  `topic_num` int(11) DEFAULT NULL,
+  `post_num` int(11) DEFAULT NULL,
+  `last_post_id` int(11) DEFAULT NULL,
+  `last_post_author` varchar(255) DEFAULT NULL,
+  `last_post_subj` varchar(1024) DEFAULT NULL,
+  `last_post_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Дамп данных таблицы `forum_forum`
+--
+
+INSERT INTO `forum_forum` (`id`, `name`, `description`, `cat_id`, `topic_num`, `post_num`, `last_post_id`, `last_post_author`, `last_post_subj`, `last_post_time`) VALUES
+(1, 'Новости?', 'Свежие и не очень.', 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'Разработка', 'Вопросы по разработке игр, а также работе в RPG Maker', 2, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `forum_posts`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_posts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic_id` int(11) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `text` text NOT NULL,
+  `text_bb` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `forum_topics`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_topics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `forum_id` int(11) NOT NULL,
+  `title` varchar(1024) NOT NULL,
+  `views` int(11) NOT NULL DEFAULT '1',
+  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `author` varchar(255) NOT NULL,
+  `posts` int(11) NOT NULL DEFAULT '1',
+  `last_post_id` int(11) DEFAULT NULL,
+  `last_post_author` varchar(255) DEFAULT NULL,
+  `last_post_subj` varchar(1024) DEFAULT NULL,
+  `last_post_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
 -- --------------------------------------------------------
 
@@ -49,16 +143,12 @@ CREATE TABLE IF NOT EXISTS `games` (
   `status` enum('в разработке','завершена','демо','отменена','заморожена') NOT NULL,
   `genre` varchar(1024) DEFAULT NULL,
   `annotation` text NOT NULL,
+  `file` varchar(256) DEFAULT NULL,
+  `images` varchar(1024) DEFAULT NULL,
+  `text_bb` text,
+  `approved` enum('0','1') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
-
---
--- Дамп данных таблицы `games`
---
-
-INSERT INTO `games` (`id`, `title`, `author`, `maker`, `status`, `genre`, `annotation`) VALUES
-(1, 'Warrior Saga Hot Road', 'Antberg', 'RPG Maker 2003', 'завершена', 'action, приключения, ролевая', 'Аркадная игра с элементами РПГ, во вселенной совместного форумного проекта "Warrior Saga". Навороченный сюжет, драматизм, философия, и перепаханная пулями горячая дорога, по которой предстоит скакать главному герою - гусару по имени Батц. Мир игры относится к направлению "Стимпанк" - это вселенная в стиле начала 20-го века.'),
-(3, 'Blocks', 'administrator', 'RPG Maker 2003', 'демо', 'симулятор, стратегия, тактика', 'Скрипт для RPG Maker 2003 демонстрирующий возможности по созданию головоломок с перемещаемыми предметами.');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=58 ;
 
 -- --------------------------------------------------------
 
@@ -107,16 +197,17 @@ CREATE TABLE IF NOT EXISTS `news` (
   `title` varchar(128) NOT NULL,
   `author` varchar(100) NOT NULL,
   `text` text NOT NULL,
+  `text_bb` text NOT NULL,
   `approved` enum('0','1') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=65 ;
 
 --
 -- Дамп данных таблицы `news`
 --
 
-INSERT INTO `news` (`id`, `date`, `title`, `author`, `text`, `approved`) VALUES
-(50, '2015-09-08 13:34:16', 'Открыто!', 'Syrax', 'Привет, путник! Добро пожаловать на портал.<br />Только здесь ты найдешь полный каталог РПГ игр на любой вкус. Удивись, насколько удобен сайт, пользуйся им, ищи игры и загружай свои! Ну нафик.', '1');
+INSERT INTO `news` (`id`, `date`, `title`, `author`, `text`, `text_bb`, `approved`) VALUES
+(50, '2015-09-08 13:34:16', 'Открыто!', 'Syrax', 'Привет, путник! Добро пожаловать на портал RMaker.<br />\r\nТолько здесь ты найдешь полный каталог русских игр, выполненных на RPG Maker, на любой вкус. Удивись, насколько удобен сайт, пользуйся им, ищи игры и загружай свои!<br />\r\nВ честь открытия портала администрация запускает <b><span style="color:#ff0000;">конкурс</span></b>!', 'Привет, путник! Добро пожаловать на портал RMaker.\r\nТолько здесь ты найдешь полный каталог русских игр, выполненных на RPG Maker, на любой вкус. Удивись, насколько удобен сайт, пользуйся им, ищи игры и загружай свои!\r\nВ честь открытия портала администрация запускает [b][color=#ff0000]конкурс[/color][/b]!', '1');
 
 -- --------------------------------------------------------
 
@@ -144,15 +235,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   `phone` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
 -- Дамп данных таблицы `users`
 --
 
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
-(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', NULL, NULL, 'I0ffi8MBkySp8.f4ciu/l.', 1268889823, 1442151770, 1, 'Admin', 'istrator', 'ADMIN', '0'),
-(2, '127.0.0.1', 'Syrax', '$2y$08$2J7Gn70/xHnZ78a.0FgEMOw8Ab2GJ2y34YvcODIJRAPxkWxaYg8.y', NULL, 'rmk@ya.ru', NULL, NULL, NULL, NULL, 1441608631, 1442151646, 1, 'Алекс', 'Сурок', 'RMaker', 'bla-bla');
+(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', NULL, NULL, 'cy12ZP.s8/f.tOo.fwkcWu', 1268889823, 1445620522, 1, 'Admin', 'istrator', 'ADMIN', '0'),
+(2, '127.0.0.1', 'Syrax', '$2y$08$2J7Gn70/xHnZ78a.0FgEMOw8Ab2GJ2y34YvcODIJRAPxkWxaYg8.y', NULL, 'rmk@ya.ru', NULL, NULL, NULL, 'voeiKBqQ5XU4qqIIoPlr/O', 1441608631, 1445634929, 1, 'Алекс', 'Сурок', 'RMaker', 'bla-bla');
 
 -- --------------------------------------------------------
 
@@ -168,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
   UNIQUE KEY `uc_users_groups` (`user_id`,`group_id`),
   KEY `fk_users_groups_users1_idx` (`user_id`),
   KEY `fk_users_groups_groups1_idx` (`group_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 --
 -- Дамп данных таблицы `users_groups`
@@ -177,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
 INSERT INTO `users_groups` (`id`, `user_id`, `group_id`) VALUES
 (1, 1, 1),
 (2, 1, 2),
-(4, 2, 2);
+(18, 2, 2);
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -1268,11 +1359,11 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('jab_username', '', 0),
 ('ldap_base_dn', '', 0),
 ('ldap_email', '', 0),
-('ldap_password', '', 0),
+('ldap_password', 'SyraxVSSmoke13!', 0),
 ('ldap_port', '', 0),
 ('ldap_server', '', 0),
 ('ldap_uid', '', 0),
-('ldap_user', '', 0),
+('ldap_user', 'Syrax', 0),
 ('ldap_user_filter', '', 0),
 ('legend_sort_groupname', '0', 0),
 ('limit_load', '0', 0),
@@ -1341,7 +1432,7 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('ranks_path', 'images/ranks', 0),
 ('read_notification_expire_days', '30', 0),
 ('read_notification_gc', '86400', 0),
-('require_activation', '1', 0),
+('require_activation', '3', 0),
 ('referer_validation', '1', 0),
 ('script_path', '/forum', 0),
 ('search_block_size', '250', 0),
@@ -1380,9 +1471,9 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('version', '3.1.5', 0),
 ('warnings_expire_days', '90', 0),
 ('warnings_gc', '14400', 0),
-('cache_last_gc', '1441444818', 1),
+('cache_last_gc', '1445632051', 1),
 ('cron_lock', '0', 1),
-('database_last_gc', '1440531730', 1),
+('database_last_gc', '1445184123', 1),
 ('last_queue_run', '1438896465', 1),
 ('newest_user_colour', '', 1),
 ('newest_user_id', '117', 1),
@@ -1392,16 +1483,16 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('num_topics', '9', 1),
 ('num_users', '10', 1),
 ('plupload_last_gc', '0', 1),
-('rand_seed', 'da2ae8e8e6c4fab7fe5bb403f54d50c5', 1),
-('rand_seed_last_update', '1441446508', 1),
-('read_notification_last_gc', '1441446509', 1),
+('rand_seed', '1730c469232945f434fc0a902d68efd5', 1),
+('rand_seed_last_update', '1445636605', 1),
+('read_notification_last_gc', '1445587015', 1),
 ('record_online_date', '1439565992', 1),
 ('record_online_users', '9', 1),
 ('search_indexing_state', '', 1),
-('search_last_gc', '1440968929', 1),
-('session_last_gc', '1440969428', 1),
+('search_last_gc', '1445628579', 1),
+('session_last_gc', '1445636608', 1),
 ('upload_dir_size', '0', 1),
-('warnings_last_gc', '1441043416', 1),
+('warnings_last_gc', '1445624779', 1),
 ('board_startdate', '1435523269', 0),
 ('default_lang', 'ru', 0),
 ('questionnaire_unique_id', 'e1c7eea72a517aab', 0),
@@ -2157,7 +2248,7 @@ CREATE TABLE IF NOT EXISTS `phpbb_log` (
   KEY `topic_id` (`topic_id`),
   KEY `reportee_id` (`reportee_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=453 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=467 ;
 
 --
 -- Дамп данных таблицы `phpbb_log`
@@ -2571,7 +2662,21 @@ INSERT INTO `phpbb_log` (`log_id`, `log_type`, `user_id`, `forum_id`, `topic_id`
 (449, 2, 1, 0, 0, 0, '127.0.0.1', 1440863734, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
 (450, 0, 2, 0, 0, 0, '127.0.0.1', 1440863793, 'LOG_ADMIN_AUTH_SUCCESS', ''),
 (451, 0, 2, 0, 0, 0, '127.0.0.1', 1440863824, 'LOG_CONFIG_SETTINGS', ''),
-(452, 2, 2, 0, 0, 0, '127.0.0.1', 1440968929, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}');
+(452, 2, 2, 0, 0, 0, '127.0.0.1', 1440968929, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(453, 0, 2, 0, 0, 0, '127.0.0.1', 1445184137, 'LOG_ADMIN_AUTH_SUCCESS', ''),
+(454, 0, 2, 0, 0, 0, '127.0.0.1', 1445184327, 'LOG_CONFIG_REGISTRATION', ''),
+(455, 2, 1, 0, 0, 0, '127.0.0.1', 1445192439, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(456, 0, 2, 0, 0, 0, '127.0.0.1', 1445192682, 'LOG_ADMIN_AUTH_SUCCESS', ''),
+(457, 2, 1, 0, 0, 0, '127.0.0.1', 1445225948, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(458, 2, 1, 0, 0, 0, '127.0.0.1', 1445586994, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(459, 0, 2, 0, 0, 0, '127.0.0.1', 1445587017, 'LOG_ADMIN_AUTH_SUCCESS', ''),
+(460, 0, 2, 0, 0, 0, '127.0.0.1', 1445587078, 'LOG_CONFIG_AUTH', ''),
+(461, 3, 2, 0, 0, 2, '127.0.0.1', 1445587484, 'LOG_USER_NEW_PASSWORD', 'a:1:{i:0;s:5:"Syrax";}'),
+(462, 2, 1, 0, 0, 0, '127.0.0.1', 1445594770, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(463, 2, 1, 0, 0, 0, '127.0.0.1', 1445605074, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(464, 2, 1, 0, 0, 0, '127.0.0.1', 1445613655, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(465, 2, 1, 0, 0, 0, '127.0.0.1', 1445620945, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}'),
+(466, 2, 1, 0, 0, 0, '127.0.0.1', 1445628579, 'LOG_IMAGE_GENERATION_ERROR', 'a:3:{i:0;s:39:"[ROOT]/phpbb/search/fulltext_native.php";i:1;i:107;i:2;s:144:"Missing argument 8 for phpbb/search/fulltext_native::__construct(), called in [ROOT]/phpbb/cron/task/core/tidy_search.php on line 61 and defined";}');
 
 -- --------------------------------------------------------
 
@@ -3152,9 +3257,7 @@ CREATE TABLE IF NOT EXISTS `phpbb_notifications` (
 
 INSERT INTO `phpbb_notifications` (`notification_id`, `notification_type_id`, `item_id`, `item_parent_id`, `user_id`, `notification_read`, `notification_time`, `notification_data`) VALUES
 (10, 5, 13, 7, 53, 0, 1436626372, 'a:6:{s:9:"poster_id";i:50;s:11:"topic_title";s:35:"армения знакомства";s:12:"post_subject";s:39:"Re: армения знакомства";s:13:"post_username";s:0:"";s:8:"forum_id";i:2;s:10:"forum_name";s:18:"Флудильня";}'),
-(11, 5, 25, 16, 58, 0, 1436720844, 'a:6:{s:9:"poster_id";i:64;s:11:"topic_title";s:42:"клубничка интим товары";s:12:"post_subject";s:46:"Re: клубничка интим товары";s:13:"post_username";s:0:"";s:8:"forum_id";i:4;s:10:"forum_name";s:15:"Новости?";}'),
-(14, 5, 95, 4, 114, 1, 1438896463, 'a:6:{s:9:"poster_id";i:48;s:11:"topic_title";s:10:"Reflection";s:12:"post_subject";s:14:"Re: Reflection";s:13:"post_username";s:0:"";s:8:"forum_id";i:6;s:10:"forum_name";s:14:"Проекты";}'),
-(15, 3, 96, 64, 50, 1, 1439177332, 'a:6:{s:9:"poster_id";i:116;s:11:"topic_title";s:31:"Атака спам-ботов.";s:12:"post_subject";s:35:"Re: Атака спам-ботов.";s:13:"post_username";s:0:"";s:8:"forum_id";i:4;s:10:"forum_name";s:15:"Новости?";}');
+(11, 5, 25, 16, 58, 0, 1436720844, 'a:6:{s:9:"poster_id";i:64;s:11:"topic_title";s:42:"клубничка интим товары";s:12:"post_subject";s:46:"Re: клубничка интим товары";s:13:"post_username";s:0:"";s:8:"forum_id";i:4;s:10:"forum_name";s:15:"Новости?";}');
 
 -- --------------------------------------------------------
 
@@ -10044,16 +10147,7 @@ CREATE TABLE IF NOT EXISTS `phpbb_sessions` (
 --
 
 INSERT INTO `phpbb_sessions` (`session_id`, `session_user_id`, `session_last_visit`, `session_start`, `session_time`, `session_ip`, `session_browser`, `session_forwarded_for`, `session_page`, `session_viewonline`, `session_autologin`, `session_admin`, `session_forum_id`) VALUES
-('54f0f631b03b9e2c4a9bb9d3877a2127', 1, 1441444818, 1441444818, 1441444818, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36', '', 'cron.php?cron_type=cron.task.core.tidy_cache', 1, 0, 0, 0),
-('be8441834c3aa0b8cbbbefcc3386a415', 1, 1441446508, 1441446508, 1441446508, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36', '', 'index.php', 1, 0, 0, 0),
-('eec4ce0fa9a4c1a2a32e525b904c5aad', 1, 1441043427, 1441043427, 1441043427, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'app.php/styles/basic/theme/stylesheet.css.map', 1, 0, 0, 0),
-('669d76fb3fbee1aca13033e44a0d3d2a', 1, 1441043232, 1441043232, 1441043232, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'index.php', 1, 0, 0, 0),
-('debb7537283f7ccc968d3a625d851778', 1, 1441043241, 1441043241, 1441043241, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'app.php/styles/basic/theme/stylesheet.css.map', 1, 0, 0, 0),
-('f33efa32fbf0fc44877b27c3a2f7868c', 1, 1441043415, 1441043415, 1441043415, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'index.php', 1, 0, 0, 0),
-('63f78f24f8d26590ec45bce6cf541835', 2, 1440835177, 1440968928, 1440969426, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'index.php', 1, 1, 0, 0),
-('fd7384e7b3b93db6cb95be469499680c', 1, 1440968961, 1440968961, 1440968961, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'app.php/styles/basic/theme/stylesheet.css.map', 1, 0, 0, 0),
-('965a9721d26ac5c4846bfe207c60410d', 1, 1440969008, 1440969008, 1440969008, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'app.php/styles/basic/theme/stylesheet.css.map', 1, 0, 0, 0),
-('6c160a26e8983e9ded401a34f5cff5ab', 1, 1440969428, 1440969428, 1440969428, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36', '', 'app.php/styles/basic/theme/stylesheet.css.map', 1, 0, 0, 0);
+('405b1ba483bb5e43aab5fab1e7b4a57d', 1, 1445636605, 1445636605, 1445636605, '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36', '', 'index.php', 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -10080,18 +10174,12 @@ INSERT INTO `phpbb_sessions_keys` (`key_id`, `user_id`, `last_ip`, `last_login`)
 ('a0a8289e115f4bb3bd5e8891bf3752e2', 49, '95.220.92.64', 1440695385),
 ('a16d860d049954d4ac9f7a725832143b', 50, '77.35.135.242', 1438028372),
 ('dfafb2f7c4f74ff192f8cb5cfb65b3a6', 64, '217.115.180.30', 1437621785),
-('c08c0e90cd6e3661f5059755cf1571fb', 2, '46.138.86.68', 1440150684),
 ('d91884aa734b4de777865b4321bbe611', 114, '37.193.199.28', 1440652422),
 ('0003453a24a4dbce07abdaa8e6a9c7b8', 114, '37.193.199.28', 1440750999),
 ('7bce0ecd309271076caf67405c3d1382', 50, '5.143.82.27', 1440750798),
 ('213a3bc7f9bce8f28b4cee6ce77fef3d', 116, '213.24.127.131', 1440843486),
 ('f20e8be2d926f87f6365b3ea971fe184', 48, '91.76.128.176', 1440531725),
-('4ea4f060d7e53df6fce8df4d5b0c774f', 117, '46.138.86.68', 1440850332),
-('710f817b6ae91bb2da1318024db214c1', 2, '46.138.86.68', 1440863415),
-('bb4b9bc1a2e23fcfb5b147129374de6b', 2, '66.249.81.148', 1440560178),
-('874d1acdec514f91590e006025a894bd', 2, '127.0.0.1', 1440863756),
-('4dd73702f7f9f98a1d096ef876fd3259', 2, '127.0.0.1', 1440864004),
-('3ba877497052a9557bc08360d5d334ec', 2, '127.0.0.1', 1440968928);
+('4ea4f060d7e53df6fce8df4d5b0c774f', 117, '46.138.86.68', 1440850332);
 
 -- --------------------------------------------------------
 
@@ -10291,7 +10379,7 @@ INSERT INTO `phpbb_topics` (`topic_id`, `forum_id`, `icon_id`, `topic_attachment
 (64, 4, 0, 0, 0, 'Атака спам-ботов.', 2, 1437173497, 0, 103, 0, 0, 71, 'Syrax', 'AA0000', 96, 116, 'Klon', '', 'Re: Атака спам-ботов.', 1439177332, 1440453776, 0, 0, 0, '', 0, 0, 1, 0, 0, 1, 0, '', 0, 6, 0, 0),
 (72, 3, 0, 0, 0, '[Без названия]', 2, 1439233164, 0, 55, 0, 0, 97, 'Syrax', 'AA0000', 98, 114, 'Antberg', '', 'Re: [Без названия]', 1439309274, 1440474004, 0, 0, 0, '', 0, 0, 0, 0, 0, 1, 0, '', 0, 2, 0, 0),
 (73, 3, 0, 0, 0, 'СНЫ (с)', 48, 1440098985, 0, 28, 0, 0, 100, 'Fox', '00AA00', 101, 114, 'Antberg', '', 'Re: СНЫ (с)', 1440099633, 1440850344, 0, 0, 0, '', 0, 0, 1, 0, 0, 1, 0, '', 0, 2, 0, 0),
-(74, 4, 0, 0, 0, 'Портал? Портал!', 2, 1440317220, 0, 31, 0, 0, 102, 'Syrax', 'AA0000', 105, 2, 'Syrax', 'AA0000', 'Re: Портал? Портал!', 1440748550, 1440856081, 0, 0, 0, '', 0, 0, 1, 0, 0, 1, 0, '', 0, 3, 0, 0);
+(74, 4, 0, 0, 0, 'Портал? Портал!', 2, 1440317220, 0, 38, 0, 0, 102, 'Syrax', 'AA0000', 105, 2, 'Syrax', 'AA0000', 'Re: Портал? Портал!', 1440748550, 1445628586, 0, 0, 0, '', 0, 0, 1, 0, 0, 1, 0, '', 0, 3, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -11040,8 +11128,8 @@ CREATE TABLE IF NOT EXISTS `phpbb_users` (
 --
 
 INSERT INTO `phpbb_users` (`user_id`, `user_type`, `group_id`, `user_permissions`, `user_perm_from`, `user_ip`, `user_regdate`, `username`, `username_clean`, `user_password`, `user_passchg`, `user_email`, `user_email_hash`, `user_birthday`, `user_lastvisit`, `user_lastmark`, `user_lastpost_time`, `user_lastpage`, `user_last_confirm_key`, `user_last_search`, `user_warnings`, `user_last_warning`, `user_login_attempts`, `user_inactive_reason`, `user_inactive_time`, `user_posts`, `user_lang`, `user_timezone`, `user_dateformat`, `user_style`, `user_rank`, `user_colour`, `user_new_privmsg`, `user_unread_privmsg`, `user_last_privmsg`, `user_message_rules`, `user_full_folder`, `user_emailtime`, `user_topic_show_days`, `user_topic_sortby_type`, `user_topic_sortby_dir`, `user_post_show_days`, `user_post_sortby_type`, `user_post_sortby_dir`, `user_notify`, `user_notify_pm`, `user_notify_type`, `user_allow_pm`, `user_allow_viewonline`, `user_allow_viewemail`, `user_allow_massemail`, `user_options`, `user_avatar`, `user_avatar_type`, `user_avatar_width`, `user_avatar_height`, `user_sig`, `user_sig_bbcode_uid`, `user_sig_bbcode_bitfield`, `user_jabber`, `user_actkey`, `user_newpasswd`, `user_form_salt`, `user_new`, `user_reminded`, `user_reminded_time`, `user_left_blocks`, `user_center_blocks`, `user_right_blocks`) VALUES
-(1, 2, 1, '00000000000w27wrgg\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000', 0, '', 1435523269, 'Anonymous', 'anonymous', '', 0, '', 0, '', 0, 0, 0, '', '3OH4HYP7AI', 1440060224, 0, 0, 0, 0, 0, 0, 'en', '', 'd M Y H:i', 3, 0, '', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', '606ec8fa6d1fec97', 1, 0, 0, '', '', ''),
-(2, 3, 5, 'zik0zjzik0zjzik0zi\ni1cjyo000000\nzik0zjzi8sg0\nzik0zjzi8sg0\nzik0zjzi8sg0\ni1cjyo000000\nzik0zjzi8sg0\nzik0zjzi8sg0', 0, '195.135.239.4', 1435523269, 'Syrax', 'syrax', '$2y$10$2lTWGbjY7ljDnwKfaZESounYWRjz7RYbYoDNfTO9bTa7brlPER4R6', 0, 'rm2kfiles@ya.ru', 163063789915, '17- 5-1991', 1440864004, 1435529394, 1440748550, 'index.php', '', 1435573561, 0, 0, 0, 0, 0, 10, 'ru', '', '|d M Y|, H:i', 1, 1, 'AA0000', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 1, 230271, '2_1435571436.jpg', 'avatar.driver.upload', 110, 118, '[i:35y7r2tv]Я знаю, как лучше.[/i:35y7r2tv]', '35y7r2tv', 'IA==', '', '', '', '4f7881de2b428923', 1, 0, 0, '', '', ''),
+(1, 2, 1, '00000000000w27wrgg\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000\ni1cjyo000000', 0, '', 1435523269, 'Anonymous', 'anonymous', '', 0, '', 0, '', 0, 0, 0, '', '3OH4HYP7AI', 1440060224, 0, 0, 0, 0, 0, 0, 'en', '', 'd M Y H:i', 3, 0, '', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', '42156553530d8b28', 1, 0, 0, '', '', ''),
+(2, 3, 5, 'zik0zjzik0zjzik0zi\ni1cjyo000000\nzik0zjzi8sg0\nzik0zjzi8sg0\nzik0zjzi8sg0\ni1cjyo000000\nzik0zjzi8sg0\nzik0zjzi8sg0', 0, '195.135.239.4', 1435523269, 'Syrax', 'syrax', '$2y$10$lrTNYbgJzZy7j.7Tt5yghOSd1aVTlwGiWO7GcW95eg6rIwn4nvZsi', 1445587484, 'rm2kfiles@ya.ru', 163063789915, '17- 5-1991', 1445609465, 1435529394, 1440748550, 'posting.php?f=4&mode=post', '', 1435573561, 0, 0, 0, 0, 0, 10, 'ru', '', '|d M Y|, H:i', 1, 1, 'AA0000', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 1, 230271, '2_1435571436.jpg', 'avatar.driver.upload', 110, 118, '[i:35y7r2tv]Я знаю, как лучше.[/i:35y7r2tv]', '35y7r2tv', 'IA==', '', '', '', '9e703e594dd961cf', 1, 0, 0, '', '', ''),
 (3, 2, 6, '', 0, '', 1435523275, 'AdsBot [Google]', 'adsbot [google]', '', 1435523275, '', 0, '', 0, 1435523275, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'ru', 'UTC', '|d M Y|, H:i', 1, 0, '9E8DA7', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 0, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', 'c77d24cfa4f8d337', 0, 0, 0, '', '', ''),
 (4, 2, 6, '', 0, '', 1435523275, 'Alexa [Bot]', 'alexa [bot]', '', 1435523275, '', 0, '', 0, 1435523275, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'ru', 'UTC', '|d M Y|, H:i', 1, 0, '9E8DA7', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 0, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', 'eb7a839c64d1b849', 0, 0, 0, '', '', ''),
 (5, 2, 6, '', 0, '', 1435523275, 'Alta Vista [Bot]', 'alta vista [bot]', '', 1435523275, '', 0, '', 0, 1435523275, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'ru', 'UTC', '|d M Y|, H:i', 1, 0, '9E8DA7', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 0, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', '123ad9d4d6e766ff', 0, 0, 0, '', '', ''),

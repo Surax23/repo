@@ -20,8 +20,8 @@ class News extends CI_Controller {
 			$page['errDescription'] = "Новостей нет.";
 		}
 		$page['title'] = 'Rmaker &mdash; новости';
-		$page['meta_k'] = 'Some shit';
-		$page['meta_d'] = 'Some shit';
+		$page['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$page['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 		$this->load->view('news', $page);
 		
 	}
@@ -32,9 +32,9 @@ class News extends CI_Controller {
 		$this->form_validation->set_rules('title', 'Title', 'required');
 		$this->form_validation->set_rules('text', 'text', 'required');
 		$page['title'] = 'Rmaker &mdash; новости';
-		$page['meta_k'] = 'Some shit';
-		$page['meta_d'] = 'Some shit';
-		$page['edit'] = array('title'=>'', 'text'=>'');
+		$page['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$page['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+		$page['edit'] = array('title'=>'', 'text'=>'', 'text_bb'=>'');
 		if ($this->form_validation->run() === FALSE) {
 			$page['success']=false;
 			$this->load->view('edit', $page);
@@ -56,19 +56,19 @@ class News extends CI_Controller {
 		//$this->form_validation->set_rules($rules);
 		
 		$page['title'] = 'Rmaker &mdash; новости';
-		$page['meta_k'] = 'Some shit';
-		$page['meta_d'] = 'Some shit';
+		$page['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$page['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 		$news = $this->News_model->getOneNews($id);
 		$user = $this->ion_auth->user()->row();
 		if ($this->ion_auth->is_admin() || $news['author']=$user->username) {
-			$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id']);
+			$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id'], 'text_bb'=>$news['0']['text_bb']);
 			if ($this->form_validation->run() === FALSE) {
 				$page['success']=false;
 				$this->load->view('edit', $page);
 			} else {
 				$this->News_model->updateNews($id);
 				$news = $this->News_model->getOneNews($id);
-				$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id']);
+				$page['edit'] = array('title'=>$news['0']['title'], 'text'=>$news['0']['text'], 'id'=>$news['0']['id'], 'text_bb'=>$news['0']['text_bb']);
 				$page['success']=true;
 				$this->load->view('edit', $page);
 			}
@@ -110,8 +110,8 @@ class News extends CI_Controller {
 				$page['errDescription'] = "Новостей нет.";
 			}
 			$page['title'] = 'Rmaker &mdash; новости';
-			$page['meta_k'] = 'Some shit';
-			$page['meta_d'] = 'Some shit';
+			$page['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+			$page['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 			$this->load->view('app', $page);
 		} else {
 			redirect(base_url());

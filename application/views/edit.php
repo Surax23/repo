@@ -18,13 +18,11 @@
 	} else {
 		echo form_open('news/edit/'.$edit['id']);
 	}
-	//print_r($news);
 ?>
     <label for="title">Название</label><br />
     <input type="input" name="title" value="<?php echo $edit['title']; ?>" /><br /><br />
     <label for="text">Текст</label><br />
-	Разрешены HTML-теги &lt;b&gt;, &lt;i&gt;, &lt;u&gt;, &lt;s&gt;, &lt;br&gt;.<br />
-    <textarea name="text" ><?php echo $edit['text']; ?></textarea><br />
+    <textarea name="text" id="editor"><?php echo $edit['text_bb']; ?></textarea><br />
 	<br />
     <input type="submit" name="submit" value="<?php if ($new===true) { echo 'Создать новость'; } else { echo 'Обновить новость'; } ?>" />
 

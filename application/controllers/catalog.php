@@ -6,10 +6,12 @@ class Catalog extends CI_Controller {
 		$this->load->model('Comments_model');
     }
 	public function index() {
-		$pageData['title'] = 'Каталог игр &mdash; главная';
+		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+		$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; главная';
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/catalog/index';
-		//$this->db->like(array('approved'=>'1'));
+		$this->db->like(array('approved'=>'1'));
 		$this->db->from('games');
 		$config['total_rows'] = $this->db->count_all_results(); //$page['news'];
 		$config['per_page'] = 10;
@@ -19,16 +21,35 @@ class Catalog extends CI_Controller {
 		if ($pageData['games'] == false) {
 			$pageData['errDescription'] = "Игр нет.";
 		}
-		$pageData['meta_k'] = 'Some shit';
-		$pageData['meta_d'] = 'Some shit';
 		$this->load->view('main', $pageData);
 	}
 	
+	public function notappr() {
+		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+		$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; неутвержденные';
+		$this->load->library('pagination');
+		$config['base_url'] = base_url().'index.php/catalog/notappr';
+		$this->db->like(array('approved'=>'0'));
+		$this->db->from('games');
+		$config['total_rows'] = $this->db->count_all_results();
+		$config['per_page'] = 10;
+		$this->pagination->initialize($config);
+		$pageData['pagination'] = $this->pagination->create_links();
+		$pageData['games'] = $this->Catalog_model->notApproved($config['per_page'], $this->uri->segment(3));
+		if ($pageData['games'] == false) {
+			$pageData['errDescription'] = "Игр нет.";
+		}
+		$this->load->view('appg', $pageData);
+	}
+	
 	public function search($param, $key) {
-		$pageData['title'] = 'Каталог игр &mdash; поиск';
+		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+		$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; поиск';
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/catalog/search/'.$param.'/'.$key;
-		//$this->db->like(array('approved'=>'1'));
+		$this->db->like(array('approved'=>'1'));
 		$this->db->select($param);
 		$this->db->where($param, $key);
 		$this->db->from('games');
@@ -40,8 +61,6 @@ class Catalog extends CI_Controller {
 		if ($pageData['games'] == false) {
 			$pageData['errDescription'] = "Игр нет.";
 		}
-		$pageData['meta_k'] = 'Some shit';
-		$pageData['meta_d'] = 'Some shit';
 		$this->load->view('main', $pageData);
 	}
 	
@@ -50,9 +69,16 @@ class Catalog extends CI_Controller {
 		if ($pageData['game'] == false) {
 			$pageData['errDescription'] = "Игры не существует.";
 		}
-		$pageData['title'] = 'Каталог игр &mdash; '.$pageData['game']['title'];
-		$pageData['meta_k'] = 'Some shit';
-		$pageData['meta_d'] = 'Some shit';
+		$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; '.$pageData['game']['title'];
+		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+		$pageData['images_g'] = explode(', ', $pageData['game']['images']);
+		if ($pageData['images_g']['0']==='') {
+			$pageData['error']=true;
+			$pageData['images_g'] = null;
+		} else {
+			$pageData['error']=false;
+		}
 		$this->load->helper('form');
 		$pageData['comments'] = $this->Comments_model->getComments($gameid, 10, 0);
 		$this->load->view("details", $pageData);
@@ -62,7 +88,7 @@ class Catalog extends CI_Controller {
 			$page['new']=true;
 			$this->load->helper('form');
 			$this->load->library('form_validation');
-			$page['edit'] = array('title'=>'', 'annotation'=>'', 'id'=>'', 'status'=>'', 'maker'=>'', 'author'=>'');
+			$page['edit'] = array('title'=>'', 'annotation'=>'', 'id'=>'', 'status'=>'', 'maker'=>'', 'author'=>'', 'text_bb'=>'');
 			$page['edit']['genre']=false;
 			$this->form_validation->set_rules('title', 'Название', 'required');
 			$this->form_validation->set_rules('annotation', 'Описание', 'required');
@@ -70,8 +96,8 @@ class Catalog extends CI_Controller {
 			$this->form_validation->set_rules('maker[]', 'Движок', 'required');
 			$this->form_validation->set_rules('status[]', 'Статус', 'required');
 			$page['title'] = 'Rmaker &mdash; Игры &mdash; Добавление новой игры';
-			$page['meta_k'] = 'Some shit';
-			$page['meta_d'] = 'Some shit';
+			$page['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+			$page['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 			if ($this->form_validation->run() === FALSE) {
 				$page['success']=false;
 				$this->load->view('games/edit', $page);
@@ -90,28 +116,30 @@ class Catalog extends CI_Controller {
 		$user = $this->ion_auth->user()->row();
 		if ($this->ion_auth->is_admin() || $game['author']=$user->username) {
 			$pageData['new']=false;
-			$pageData['edit'] = array('title'=>$game['title'], 'author'=>$game['author'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
+			$pageData['edit'] = array('title'=>$game['title'], 'author'=>$game['author'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker'], 'text_bb'=>$game['text_bb']);
 			$pageData['edit']['genre']=explode(', ', $game['genre']);
 			$this->load->helper('form');
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('title', 'Название', 'required');
 			$this->form_validation->set_rules('annotation', 'Описание', 'required');
-			$pageData['title'] = 'Каталог игр &mdash; Редактирование &mdash; '.$game['title'];
-			$pageData['meta_k'] = 'Some shit';
-			$pageData['meta_d'] = 'Some shit';
+			$this->form_validation->set_rules('genre[]', 'Жанр', 'required');
+			$this->form_validation->set_rules('maker[]', 'Движок', 'required');
+			$this->form_validation->set_rules('status[]', 'Статус', 'required');
+			$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; Редактирование &mdash; '.$game['title'];
+			$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+			$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 			if ($this->form_validation->run() === FALSE) {
 				$pageData['success']=false;
 				$game = $this->Catalog_model->getGameDetails($gameid);
-				$pageData['edit'] = array('title'=>$game['title'], 'author'=>$game['author'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
+				$pageData['edit'] = array('title'=>$game['title'], 'author'=>$game['author'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker'], 'text_bb'=>$game['text_bb']);
 				$pageData['edit']['genre']=explode(', ', $game['genre']);
-				//print_r($pageData['edit']['genre']);
 				$this->load->view('games/edit', $pageData);
 			} else {
 				$pageData['success']=true;
 				$this->Catalog_model->update($gameid);
 				$pageData['info'] = $this->input->post('status');
 				$game = $this->Catalog_model->getGameDetails($gameid);
-				$pageData['edit'] = array('title'=>$game['title'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker']);
+				$pageData['edit'] = array('title'=>$game['title'], 'author'=>$game['author'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker'], 'text_bb'=>$game['text_bb']);
 				$pageData['edit']['genre']=explode(', ', $game['genre']);
 				$this->load->view('games/edit', $pageData);
 			}
@@ -123,7 +151,9 @@ class Catalog extends CI_Controller {
 		$game = $this->Catalog_model->getGameDetails($id);
 		$user = $this->ion_auth->user()->row();
 		if ($this->ion_auth->is_admin() || $game['author']=$user->username) {
-			unlink($game['file']);
+			if (!$game['file']=='') {
+				unlink($game['file']);
+			}
 			$what = $this->Catalog_model->delete($id);
 			if ($what) {
 				redirect(base_url().'index.php/panel');
@@ -139,9 +169,9 @@ class Catalog extends CI_Controller {
 		if ($this->ion_auth->is_admin() || $game['author']=$user->username) {
 			$this->load->helper('form');
 			$pageData['edit'] = array('title'=>$game['title'], 'annotation'=>$game['annotation'], 'id'=>$game['id'], 'status'=>$game['status'], 'maker'=>$game['maker'], 'file'=>$game['file']);
-			$pageData['title'] = 'Каталог игр &mdash; Загрузка файла &mdash; '.$game['title'];
-			$pageData['meta_k'] = 'Some shit';
-			$pageData['meta_d'] = 'Some shit';
+			$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; Загрузка файла &mdash; '.$game['title'];
+			$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+			$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 			$pageData['error'] = '';
 			$path = './users/'.$game['author'].'/';
 			if (!is_dir($path)) {
@@ -173,6 +203,30 @@ class Catalog extends CI_Controller {
 			}
 		} else {
 			redirect(base_url().'index.php/panel');
+		}
+	}
+	
+	public function delete_image($id, $image) { // Test version
+		$game = $this->Catalog_model->getGameDetails($id);
+		$user = $this->ion_auth->user()->row();
+		if ($this->ion_auth->is_admin() || $game['author']=$user->username) {
+			//unlink($game['file']);
+			$name = $game['author'];
+			unlink('users/'.$name.'/img/'.$image);
+			if (!(stripos($game['images'], 'users/'.$name.'/img/'.$image.', ')===false)) {	
+				$image = 'users/'.$name.'/img/'.$image.', ';
+			} elseif (!(stripos($game['images'], ', users/'.$name.'/img/'.$image)===false)) {
+				$image = ', users/'.$name.'/img/'.$image;
+			} else {
+				$image = 'users/'.$name.'/img/'.$image;
+			}
+			$what = $this->Catalog_model->delete_image($id, $image, $name);
+			
+			if ($what) {
+				redirect(base_url().'index.php/catalog/upload_images/'.$game['id']);
+			}
+		} else {
+			redirect(base_url().'index.php/catalog');
 		}
 	}
 	
@@ -209,21 +263,29 @@ class Catalog extends CI_Controller {
 						$this->upload->do_upload('file');
 						$tmp_data = $this->upload->data();
 						$files_data[$i]['data'] = $tmp_data['full_path'];
-						$string = $string.stristr($tmp_data['full_path'], '/users/').', ';
+						$string = $string.stristr($tmp_data['full_path'], 'users/').', ';
+					}
 				}
+				$string = substr($string, 0, -2);
+				if ($game['images'] === null || $game['images'] === '') {
+					$this->Catalog_model->upload_images($game['id'], $string);
+				} else {
+					$this->Catalog_model->update_images($game['id'], $string);
 				}
+				$game = $this->Catalog_model->getGameDetails($id);
 			}
-			//print_r($string);
-			$this->Catalog_model->upload_images($game['id'], $string);
-			$pageData['title'] = 'Каталог игр &mdash; Загрузка изображений &mdash; '.$game['title'];
-			$pageData['images'] = $game['images'];
-			print_r($pageData['images']);
-			$pageData['images'] = substr($game['images'], 0, -2);
+			$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; Загрузка изображений &mdash; '.$game['title'];
 			$pageData['images'] = explode(', ', $game['images']);
-			$pageData['game'] = $game['title'];
-			//print_r($pageData['images']);
-			$pageData['meta_k'] = 'Some shit';
-			$pageData['meta_d'] = 'Some shit';
+			if ($pageData['images']['0']==='') {
+				$pageData['error']=true;
+				$pageData['images'] = null;
+			} else {
+				$pageData['error']=false;
+			}
+			$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+			$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+			$game = $this->Catalog_model->getGameDetails($id);
+			$pageData['game'] = $game;
 			$this->load->view('games/images', $pageData);
 		} else {
 			redirect(base_url().'index.php/panel');

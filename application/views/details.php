@@ -12,7 +12,16 @@
 		echo "<h3>Описание</h3><p>".$game['annotation']."</p>";
 	?>
 	<h3>Скриншоты</h3>
-	<p>Тут потом будут скриншоты.</p>
+<p><?php
+	//print_r($images);
+	if ($error) {
+		echo '<p>Изображения отсутствуют.</p>';
+	} else {
+		foreach ($images_g as $image) {
+			echo '<a href="'.base_url().$image.'" rel="rr" onclick="return jsiBoxOpen(this)"><img src="'.base_url().$image.'" width="160" height="120" alt="'.$game['title'].'" /></a> ';
+		}
+	}
+?></p>
 	<?php
 		if (file_exists($game['file'])) {
 			echo "<p><a href='".base_url().'index.php/catalog/download/'.$game['id']."'><img src='".base_url()."/icon/button.png'></a></p>";
@@ -33,7 +42,12 @@
 			echo '<p>Комментариев нет</p>';
 		} else {
 			foreach ($comments as $comment) {
-				echo '<div class="comments"><a href="'.base_url().'index.php/comments/delete/'.$comment['id'].'/'.$game['id'].'" onClick="return window.confirm(\'Вы действительно хотите удалить комментарий?\')"><img height="16" title="Удалить" alt="Удалить" src="'.base_url().'icon/delete.png"></a> &mdash; <a href="#">'.$comment['author'].'</a> ['.$comment['date'].']:<br />';
+				if ($this->ion_auth->is_admin()) {
+					echo '<div class="comments"><a href="'.base_url().'index.php/comments/delete/'.$comment['id'].'/'.$game['id'].'" onClick="return window.confirm(\'Вы действительно хотите удалить комментарий?\')"><img height="16" title="Удалить" alt="Удалить" src="'.base_url().'icon/delete.png"></a>';
+				} else {
+					echo '<div class="comments">';
+				}
+				echo '&mdash; <a href="#">'.$comment['author'].'</a> ['.$comment['date'].']:<br />';
 				echo $comment['comment'].'</div>';
 			}
 		}

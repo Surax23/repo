@@ -25,7 +25,6 @@
 	} else {
 		echo form_open('catalog/edit/'.$edit['id']);
 	}
-	//print_r($edit['genre']);
 ?>
     <p><label for="title">Название</label><br />
     <input type="input" name="title" value="<?php echo $edit['title']; ?>" /></p>
@@ -273,7 +272,7 @@
 	</table>
 
     <label for="text">Описание</label><br />
-    <textarea name="annotation" ><?php echo $edit['annotation']; ?></textarea><br />
+    <textarea name="annotation"  id="editor"><?php echo $edit['text_bb']; ?></textarea><br />
 	<br />
     <input type="submit" name="submit" value="<?php if ($new===true) { echo 'Добавить игру'; } else { echo 'Обновить игру'; } ?>" />
 

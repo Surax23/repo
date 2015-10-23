@@ -39,12 +39,15 @@ class News_model extends CI_Model {
 		
 		public function addNews() {
 			$user = $this->ion_auth->user()->row();
+			$this->load->helper('bbcode');
+			$text = $this->input->post('text');
+			$text = bbcodes($text);
 			$data = array(
 					'title' => $this->input->post('title'),
 					'author' => $user->username,
-					'text' => $this->input->post('text')
+					'text' => $text,
+					'text_bb' => $this->input->post('text')
 				);
-			$data['text'] = strip_tags($data['text'], '<br><b><i><u><s>');
 			if ($this->ion_auth->is_admin()) {
 				$data['approved']='1';
 			} else {
@@ -54,18 +57,19 @@ class News_model extends CI_Model {
 		}
 		public function updateNews($id) {
 			$user = $this->ion_auth->user()->row();
+			$this->load->helper('bbcode');
+			$text = $this->input->post('text');
+			$text = bbcodes($text);
 			$data = array(
 					'title' => $this->input->post('title'),
-					//'author' => $user->username,
-					'text' => $this->input->post('text')
+					'text' => $text,
+					'text_bb' => $this->input->post('text')
 				);
-			$data['text'] = strip_tags($data['text'], '<br><b><i><u><s>');
 			if ($this->ion_auth->is_admin()) {
 				$data['approved']='1';
 			} else {
 				$data['approved']='0';
 			}
-			//$this->db->query('update news set title=?, text=? where id=?', array($data['title'], $data['text'], $id));
 			$this->db->update('news', $data, array('id'=>$id));
 			return true;
 		}

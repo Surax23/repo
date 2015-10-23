@@ -1,5 +1,10 @@
-<h1><?php echo lang('change_password_heading');?></h1>
+<?php
+	$this->load->view('header');
+?>
 
+
+<h2><?php echo lang('change_password_heading');?></h2>
+<div class="games">
 <div id="infoMessage"><?php echo $message;?></div>
 
 <?php echo form_open("auth/change_password");?>
