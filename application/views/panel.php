@@ -5,15 +5,15 @@
 <div class='games'><div id='news'>
 	<?php 
 		if (($this->ion_auth->logged_in())&&!($this->ion_auth->is_admin())) {
-			echo '<p><a href="news/add">>> Предложить новость</a></p>';
+			echo '<a class="button" href="news/add"> Предложить новость</a>';
 		} else if (($this->ion_auth->logged_in())&&($this->ion_auth->is_admin())) {
-			echo '<p><a href="'.base_url().'index.php/news/add">>> Добавить новость</a></p>';
-			echo '<p><a href="'.base_url().'index.php/news/app">>> Неутвержденные новости</a></p>';
-			echo '<p><a href="'.base_url().'index.php/catalog/notappr">>> Неутвержденные игры</a></p>';
+			echo '<a class="button" href="'.base_url().'index.php/news/add"> Добавить новость</a> ';
+			echo '<a class="button" href="'.base_url().'index.php/news/app"> Неутвержденные новости</a> ';
+			echo '<a class="button" href="'.base_url().'index.php/catalog/notappr"> Неутвержденные игры</a>';
 		}
-		echo '<hr /><p></p>';
+		echo '<br /><br />';
 	?>
-	<p><a href="<?php echo base_url().'index.php/catalog/add'; ?>">>> Добавить игру</a></p>
+	<p><a class="button" href="<?php echo base_url().'index.php/catalog/add'; ?>"> Добавить игру</a></p>
 	<div>
 		<table>
 			<tr><th>Игра</th><th>Статус</th><th>Действия</th></tr>
