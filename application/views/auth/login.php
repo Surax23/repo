@@ -10,7 +10,7 @@
 <?php echo form_open("auth/login");?>
 
   <p>
-    <?php echo lang('login_identity_label', 'identity');?><br />
+    Логин:<br />
     <?php echo form_input($identity);?>
   </p>
 

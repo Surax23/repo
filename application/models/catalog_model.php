@@ -6,7 +6,7 @@ class Catalog_model extends CI_Model {
                 $this->load->database();
         }
 		public function getAllGames($num, $offset) {
-			$this->db->order_by('id', 'RANDOM');
+			//$this->db->order_by('id', 'RANDOM');
 			$query = $this->db->get_where('games', array('approved'=>'1'), $num, $offset);
 			$games = $query->result_array();
 			if (count($games) == 0) {
@@ -27,6 +27,7 @@ class Catalog_model extends CI_Model {
 		
 		public function getSearchGames($num, $offset, $param, $key) {
 			//$this->db->order_by('id', 'DESC');
+			$this->db->order_by($param, 'DESC');
 			$this->db->where($param, $key);
 			$query = $this->db->get('games', $num, $offset);
 			print_r($query);
@@ -51,8 +52,9 @@ class Catalog_model extends CI_Model {
 			$this->load->helper('bbcode');
 			$text = $this->input->post('annotation');
 			$text = bbcodes($text);
+			$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
 			$data = array(
-					'title' => $this->input->post('title'),
+					'title' => strip_tags($this->input->post('title')),
 					'author' => '',
 					'annotation' => $text,
 					'text_bb' => $this->input->post('annotation'),
@@ -61,12 +63,9 @@ class Catalog_model extends CI_Model {
 				);
 			if ($this->ion_auth->is_admin()) {
 				$data['approved']='1';
-			} else {
-				$data['approved']='0';
-			}
-			if ($this->ion_auth->is_admin()) {
 				$data['author'] = $this->input->post('author');
 			} else {
+				$data['approved']='0';
 				$user = $this->ion_auth->user()->row();
 				$data['author'] = $user->username;
 			}
@@ -82,14 +81,14 @@ class Catalog_model extends CI_Model {
 			$this->load->helper('bbcode');
 			$text = $this->input->post('annotation');
 			$text = bbcodes($text);
+			$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
 			$data = array(
-					'title' => $this->input->post('title'),
+					'title' => strip_tags($this->input->post('title')),
 					'annotation' => $text,
 					'text_bb' => $this->input->post('annotation'),
 					'maker' => $this->input->post('maker')['0'],
 					'status' => $this->input->post('status')['0']
 				);
-			$data['annotation']=strip_tags($data['annotation'], '<br><b><i><u><s>');
 			$data['genre']=null;
 			$data['genre']=$this->input->post('genre')['0'];
 			for($i=1;$i<count($this->input->post('genre'));$i++) {
@@ -110,11 +109,8 @@ class Catalog_model extends CI_Model {
 		}
 		
 		public function update_images($id, $images) {
-			//$data = array('images' => $images);
-			//$this->db->set('images', 'CONCAT(images, '.$images);
-			//$this->db->select('CONCAT (images, ", ",'.$images.')');
 			$this->db->set('images', 'CONCAT(images, ", ", "'.$images.'")', FALSE);
-			return $this->db->update('games'/*, $data, array('id'=>$id)*/);
+			return $this->db->update('games');
 		}
 		
 		public function upload_images($id, $images) {
@@ -123,10 +119,7 @@ class Catalog_model extends CI_Model {
 		}
 		
 		public function delete_image($id, $image, $name) {
-			//$data = array('images' => $image);
-			//$image = $this->db->escape($image);
-			//echo $image;
-			//echo $image;
+			$data = array('$image' => null);
 			$this->db->set('images', 'REPLACE(images, "'.$image.'", "")', FALSE);
 			return $this->db->update('games', null, array('id'=>$id));
 		}

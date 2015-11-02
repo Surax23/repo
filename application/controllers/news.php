@@ -10,6 +10,7 @@ class News extends CI_Controller {
 		$config['base_url'] = base_url().'index.php/news/index';
 		$this->db->like(array('approved'=>'1'));
 		$this->db->from('news');
+		$config['use_page_numbers'] = TRUE;
 		$config['total_rows'] = $this->db->count_all_results(); //$page['news'];
 		$config['per_page'] = 5;
 		$this->pagination->initialize($config);
@@ -23,8 +24,8 @@ class News extends CI_Controller {
 		$page['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
 		$page['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 		$this->load->view('news', $page);
-		
 	}
+	
 	public function add() {
 		$page['new']=true;
 		$this->load->helper('form');
@@ -44,6 +45,7 @@ class News extends CI_Controller {
 			$this->load->view('edit', $page);
 		}
 	}
+	
 	public function edit($id) {
 		$page['new']=false;
 		$this->load->helper('form');

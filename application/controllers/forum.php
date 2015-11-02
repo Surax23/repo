@@ -60,16 +60,20 @@ class Forum extends CI_Controller {
 		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
 		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 		$this->Forum_model->updateNViews($topic_id);
-		$pageData['topic'] = $this->Forum_model->getTopic($topic_id);
-		$pageData['title'] = 'RMaker &mdash; форум &mdash; '.$pageData['topic']['title'];
+		
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/forum/topic/'.$topic_id;
+		$config['uri_segment'] = 4;
 		$this->db->like(array('topic_id'=>$topic_id));
 		$this->db->from('forum_posts');
 		$config['total_rows'] = $this->db->count_all_results();
+		//print_r($config['total_rows']);
 		$config['per_page'] = 15;
 		$this->pagination->initialize($config);
 		$pageData['pagination'] = $this->pagination->create_links();
+		
+		$pageData['topic'] = $this->Forum_model->getTopic($topic_id);
+		$pageData['title'] = 'RMaker &mdash; форум &mdash; '.$pageData['topic']['title'];
 		
 		$pageData['posts'] = $this->Forum_model->getPosts($topic_id, $config['per_page'], $this->uri->segment(4));
 		$this->load->view('forum/topic', $pageData);
@@ -98,6 +102,34 @@ class Forum extends CI_Controller {
 			}
 		} else {
 			redirect(base_url().'index.php/forum/topic/'.$tp_d);
+		}
+	}
+	
+	public function edit($post_id) {
+		//$pt_d = $post_id;
+		$user = $this->ion_auth->user()->row();
+		$post = $this->Forum_model->getPost($post_id);
+		if (($this->ion_auth->logged_in()) && ($post['author']=$user->username)) {
+			$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+			$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+			$pageData['topic'] = $this->Forum_model->getTopic($post['topic_id']);
+			$pageData['title'] = 'RMaker &mdash; форум &mdash; редактирование сообщения в '.$pageData['topic']['title'];
+			$pageData['post'] = $post;
+			$this->load->helper('form');
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('text', 'текст', 'required');
+			
+			//$pageData['posts'] = $this->Forum_model->getPosts($topic_id, 10, $this->uri->segment(4));
+			if ($this->form_validation->run() === FALSE) {
+				$page['success']=false;
+				$this->load->view('forum/edit', $pageData);
+			} else {
+				$this->Forum_model->updatePost($post_id);
+				$page['success']=true;
+				redirect(base_url().'index.php/forum/topic/'.$pageData['topic']['id']);
+			}
+		} else {
+			redirect(base_url().'index.php/forum/topic/'.$pageData['topic']['id']);
 		}
 	}
 	

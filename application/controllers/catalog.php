@@ -294,7 +294,8 @@ class Catalog extends CI_Controller {
 	
 	public function download($id) {
 		$this->load->helper('download');
+		$this->load->helper('bbcode');
 		$game = $this->Catalog_model->getGameDetails($id);
-		force_download($game['title'].'.'.end(explode(".", $game['file'])), file_get_contents($game['file']));
+		force_download(transliterate($game['title']).'.'.end(explode(".", $game['file'])), file_get_contents($game['file']));
 	}
 }

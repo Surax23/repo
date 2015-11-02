@@ -42,6 +42,7 @@ class News_model extends CI_Model {
 			$this->load->helper('bbcode');
 			$text = $this->input->post('text');
 			$text = bbcodes($text);
+			$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
 			$data = array(
 					'title' => $this->input->post('title'),
 					'author' => $user->username,
@@ -60,6 +61,7 @@ class News_model extends CI_Model {
 			$this->load->helper('bbcode');
 			$text = $this->input->post('text');
 			$text = bbcodes($text);
+			$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
 			$data = array(
 					'title' => $this->input->post('title'),
 					'text' => $text,

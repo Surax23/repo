@@ -53,18 +53,15 @@
 		}
 	?>
 	</div><br /><br />
-	<h3>Написать комментарий</h3>
-	<p>Разрешены HTML-теги &lt;b&gt;, &lt;i&gt;, &lt;u&gt;, &lt;s&gt;, &lt;br&gt;.</p>
-	<?php
+<?php
+	if ($this->ion_auth->logged_in()) {
+		echo '<h3>Написать комментарий</h3>';
 		echo form_open('comments/add/'.$game['id']);
-	?>
-	<textarea name="comment" ></textarea><br /><br />
-	<input type="submit" name="submit" value="Отправить" />
-	</form>
-	<!-- <table width="100%"><tr><td>1</td><td>2</td></tr></table> -->
-	<?php
-		
-	?>
+		echo '<textarea name="comment"  id="editor"></textarea><br /><br />';
+		echo '<input type="submit" name="submit" value="Отправить" />';
+		echo '</form>';
+	}
+?>
 	</div></div>
 <?php
 	$this->load->view('footer');

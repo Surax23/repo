@@ -17,13 +17,16 @@ class Comments_model extends CI_Model {
 	}
 	
 	public function addComment($game_id) {
+		$this->load->helper('bbcode');
+		$text = $this->input->post('comment');
+		$text = bbcodes($text);
+		$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
 		$user = $this->ion_auth->user()->row();
 		$data = array(
 				'game_id' => $game_id,
 				'author' => $user->username,
-				'comment' => $this->input->post('comment')
+				'comment' => $text
 			);
-		$data['comment'] = strip_tags($data['comment'], '<br><b><i><u><s>');
 		return $this->db->insert('comments', $data);
 	}
 	

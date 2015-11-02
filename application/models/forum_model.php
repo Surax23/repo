@@ -74,6 +74,7 @@ class Forum_model extends CI_Model {
 				'author' => $user->username,
 				'last_post_author' => $user->username,
 				'last_post_subj' => $this->input->post('title'),
+				'last_post_time' => time(),
 				'forum_id' => $forum_id
 			);
 		//$data['text'] = strip_tags($data['text'], '<br><b><i><u><s>');
@@ -84,6 +85,7 @@ class Forum_model extends CI_Model {
 		//Add post
 		$text = $this->input->post('text');
 		$text = bbcodes($text);
+		$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
 		$data2 = array(
 				'author' => $user->username,
 				'text_bb' => $this->input->post('text'),
@@ -132,11 +134,13 @@ class Forum_model extends CI_Model {
 		
 		$text = $this->input->post('text');
 		$text = bbcodes($text);
+		$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
 		$data2 = array(
 				'author' => $user->username,
 				'text_bb' => $this->input->post('text'),
 				'topic_id' => $topic_id,
-				'text' => $text
+				'text' => $text,
+				'time' => date("Y-m-d H:i:s")
 			);
 		$str2 = $this->db->insert_string('forum_posts', $data2);
 		$this->db->query($str2);
@@ -152,6 +156,32 @@ class Forum_model extends CI_Model {
 		$where = array('id' => $topic_id);
 		$string = $this->db->update_string('forum_topics', $data, $where);
 		$this->db->query($string);
+		return true;
+	}
+	
+	public function getPost($post_id) {
+		$query = $this->db->get_where('forum_posts', array('id'=>$post_id));
+		$post = $query->result_array();
+		if (count($post) == 0) {
+			return false;
+		}
+		return $post['0'];
+	}
+	
+	public function updatePost($post_id) {
+		$this->Forum_model->getPost($post_id);
+		$this->load->helper('bbcode');
+		$text = $this->input->post('text');
+		$text = bbcodes($text);
+		$text = strip_tags($text, '<br><br /><b><i><u><s><blockquote><span><a><img><code>');
+		$data = array(
+				'text_bb' => $this->input->post('text'),
+				'text' => $text,
+				'last_updated' => date("Y-m-d H:i:s")
+			);
+		$where = array('id' => $post_id);
+		$str = $this->db->update_string('forum_posts', $data, $where);
+		$this->db->query($str);
 		return true;
 	}
 }
