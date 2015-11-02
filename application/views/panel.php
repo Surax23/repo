@@ -3,17 +3,25 @@
 ?>
 <h2>Панель управления</h2>
 <div class='games'><div id='news'>
+<h3>Портал</h3><br />
 	<?php 
 		if (($this->ion_auth->logged_in())&&!($this->ion_auth->is_admin())) {
-			echo '<a class="button" href="news/add"> Предложить новость</a>';
+			echo '<a class="button_panel" href="news/add"> Предложить новость</a>';
 		} else if (($this->ion_auth->logged_in())&&($this->ion_auth->is_admin())) {
-			echo '<a class="button" href="'.base_url().'index.php/news/add"> Добавить новость</a> ';
-			echo '<a class="button" href="'.base_url().'index.php/news/app"> Неутвержденные новости</a> ';
-			echo '<a class="button" href="'.base_url().'index.php/catalog/notappr"> Неутвержденные игры</a>';
+			echo '<a class="button_panel" href="'.base_url().'index.php/news/add"> Добавить новость</a> ';
+			echo '<a class="button_panel" href="'.base_url().'index.php/news/app"> Неутвержденные новости</a> ';
+			echo '<a class="button_panel" href="'.base_url().'index.php/catalog/notappr"> Неутвержденные игры</a>';
 		}
 		echo '<br /><br />';
 	?>
-	<p><a class="button" href="<?php echo base_url().'index.php/catalog/add'; ?>"> Добавить игру</a></p>
+<h3>Профиль пользователя</h3>
+<?php
+	$user = $this->ion_auth->user()->row();
+	echo 'В разработке...<br /><br />';
+?>
+	
+<h3>Игры</h3><br />
+	<p><a class="button_panel" href="<?php echo base_url().'index.php/catalog/add'; ?>"> Добавить игру</a></p>
 	<div>
 		<table>
 			<tr><th>Игра</th><th>Статус</th><th>Действия</th></tr>

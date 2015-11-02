@@ -21,6 +21,9 @@
 		echo '</div>';
 		echo '<div id="forum_post">'.$post['text'].'<div style="clear:both;"></div></div></div><br />';
 	}
+	if ( $this->ion_auth->logged_in() ) {
+		echo '<br /><a class="button" href="'.base_url().'index.php/forum/reply/'.$topic['id'].'">Ответить</a>';
+	}
 	echo $pagination;
 ?>
 </div></div>	

@@ -99,6 +99,11 @@
 		} else {
 			echo '<option value="RPG Maker VX Ace">RPG Maker VX Ace</option>';
 		}
+		if ($edit['maker']==='RPG Maker MV') {
+			echo '<option selected value="RPG Maker MV">RPG Maker MV</option>';
+		} else {
+			echo '<option value="RPG Maker MV">RPG Maker MV</option>';
+		}
 		?>
 	</select></p>
 	</td>

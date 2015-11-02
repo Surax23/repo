@@ -474,6 +474,31 @@ a {
 	border: solid 4px #FFA91F;
 }
 
+.button_panel {
+	position: relative;
+	text-decoration: none;
+	top: -8px;
+	padding: 5px;
+	underline: none;
+	background: rgb(23, 96, 147);
+	color: #fff;
+	width: 100px;
+	height: 64px;
+	border: solid 4px rgb(23, 96, 147);
+}
+
+.button_panel:hover {
+	position: relative;
+	top: -8px;
+	padding: 5px;
+	underline: none;
+	background: #FFA91F;
+	color: #fff;
+	width: 100px;
+	height: 64px;
+	border: solid 4px #FFA91F;
+}
+
 
 #wrapper {
 	width: 978px;

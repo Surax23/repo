@@ -3,6 +3,7 @@
 ?>
 <h2>Загрузка файла для игры "<?php echo $edit['title'] ?>"</h2>
 <div class="games">
+Максимальный объем файла: 128Мб.
 <?php 
 	if (!($error='You did not select a file to upload.')) {
 		echo '<p>'.$error.'</p>';

@@ -4,8 +4,11 @@ class Catalog extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Catalog_model');
 		$this->load->model('Comments_model');
+		$this->load->library('session');
     }
+	
 	public function index() {
+		$this->load->helper('form');		
 		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
 		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
 		$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; главная';
@@ -13,11 +16,40 @@ class Catalog extends CI_Controller {
 		$config['base_url'] = base_url().'index.php/catalog/index';
 		$this->db->like(array('approved'=>'1'));
 		$this->db->from('games');
-		$config['total_rows'] = $this->db->count_all_results(); //$page['news'];
+		$config['total_rows'] = $this->db->count_all_results();
 		$config['per_page'] = 10;
+		$config['use_page_numbers'] = TRUE;
+		$page_num = $this->uri->segment(3, 1);
+		$offset = ($page_num - 1) * $config['per_page'];
 		$this->pagination->initialize($config);
 		$pageData['pagination'] = $this->pagination->create_links();
-		$pageData['games'] = $this->Catalog_model->getAllGames($config['per_page'], $this->uri->segment(3));
+		$pageData['games'] = $this->Catalog_model->getAllGames($config['per_page'], $offset);
+		if ($pageData['games'] == false) {
+			$pageData['errDescription'] = "Игр нет.";
+		}
+		$this->load->view('main', $pageData);
+	}
+	
+	public function search() {
+		$this->load->helper('form');
+		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
+		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
+		$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; поиск';
+		
+		//$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 1;
+		
+			$param = array(
+				'title' => $this->input->post('title'),
+				'author' => $this->input->post('author'),
+				'status' => $this->input->post('status'),
+				'maker' => $this->input->post('maker'),
+				'genre' => $this->input->post('genre')['0'],
+			);
+		
+		
+		$pageData['games'] = $this->Catalog_model->getSearchGames($param);
+		
+		
 		if ($pageData['games'] == false) {
 			$pageData['errDescription'] = "Игр нет.";
 		}
@@ -40,28 +72,7 @@ class Catalog extends CI_Controller {
 		if ($pageData['games'] == false) {
 			$pageData['errDescription'] = "Игр нет.";
 		}
-		$this->load->view('appg', $pageData);
-	}
-	
-	public function search($param, $key) {
-		$pageData['meta_k'] = 'rpg maker, rpgmaker, rpg maker vx, rpgmakervx, rpg maker vx ace, rpgmakervxace, создание игр, игры, разработка игр, RPG игры, RPG, jRPG, скачать игры';
-		$pageData['meta_d'] = 'RMaker - портал для разработчиков игр и игроков. Здесь можно разместить свою игру на RPG Maker или же скачать игру по нраву.';
-		$pageData['title'] = 'RMaker &mdash; каталог игр &mdash; поиск';
-		$this->load->library('pagination');
-		$config['base_url'] = base_url().'index.php/catalog/search/'.$param.'/'.$key;
-		$this->db->like(array('approved'=>'1'));
-		$this->db->select($param);
-		$this->db->where($param, $key);
-		$this->db->from('games');
-		$config['total_rows'] = $this->db->count_all_results(); //$page['news'];
-		$config['per_page'] = 10;
-		$this->pagination->initialize($config);
-		$pageData['pagination'] = $this->pagination->create_links();
-		$pageData['games'] = $this->Catalog_model->getSearchGames($config['per_page'], $this->uri->segment(5), $param, $key);
-		if ($pageData['games'] == false) {
-			$pageData['errDescription'] = "Игр нет.";
-		}
-		$this->load->view('main', $pageData);
+		$this->load->view('games/appg', $pageData);
 	}
 	
 	public function gamedetails($gameid) {
@@ -189,6 +200,15 @@ class Catalog extends CI_Controller {
 				$this->Catalog_model->upload($game['id'], $path.$this->upload->data()['file_name']);
 				redirect(base_url().'index.php/catalog/upload/'.$game['id']);
 			}
+		}
+	}
+	
+	public function approve($id) {
+		if ($this->ion_auth->is_admin()) {
+			$this->Catalog_model->approve($id);
+			redirect(base_url().'index.php/catalog/gamedetailes/'.$id);
+		} else {
+			redirect(base_url().'index.php/catalog');
 		}
 	}
 	

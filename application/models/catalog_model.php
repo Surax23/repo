@@ -5,6 +5,13 @@ class Catalog_model extends CI_Model {
         {
                 $this->load->database();
         }
+		
+		public function approve($id) {
+			$data = array('approved' => '1');
+			$this->db->update('games', $data, array('id'=>$id));
+			return true;
+		}
+		
 		public function getAllGames($num, $offset) {
 			//$this->db->order_by('id', 'RANDOM');
 			$query = $this->db->get_where('games', array('approved'=>'1'), $num, $offset);
@@ -25,17 +32,23 @@ class Catalog_model extends CI_Model {
 			return $games;
 		}
 		
-		public function getSearchGames($num, $offset, $param, $key) {
-			//$this->db->order_by('id', 'DESC');
-			$this->db->order_by($param, 'DESC');
-			$this->db->where($param, $key);
-			$query = $this->db->get('games', $num, $offset);
-			print_r($query);
+		public function getSearchGames($param) {
+			//$this->db->order_by($param, 'DESC');
+			$this->db->like($param);
+			$query = $this->db->get('games');
+			//print_r($query);
 			$games = $query->result_array();
 			if (count($games) == 0) {
 				return false;
 			}
 			return $games;
+		}
+		
+		public function searchCount($param) {
+			$this->db->like($param);
+			$this->db->from('games');
+			$cnt = $this->db->count_all_results();
+			return $cnt;
 		}
 		
 		public function getGameDetails($gameId) {

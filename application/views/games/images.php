@@ -3,6 +3,7 @@
 ?>
 <h2>Загрузка изображений для <?php echo $game['title'] ?></h2>
 <div class="games">
+Максимальные объем, ширина и высота скриншота: 2Мб, 1024px и 768px соответственно.
 <form action=""  enctype="multipart/form-data" method="POST">	
 <input type="file" min="1" max="9999" name="file[]" multiple="true" /> <!--будет передан массив файлов -->
 <input type="submit" name="load_files" value="Загрузить" />
