@@ -230,9 +230,10 @@ class Catalog extends CI_Controller {
 		$game = $this->Catalog_model->getGameDetails($id);
 		$user = $this->ion_auth->user()->row();
 		if ($this->ion_auth->is_admin() || $game['author']=$user->username) {
-			//unlink($game['file']);
 			$name = $game['author'];
-			unlink('users/'.$name.'/img/'.$image);
+			if (file_exists('users/'.$name.'/img/'.$image)) {
+				unlink('users/'.$name.'/img/'.$image);
+			}
 			if (!(stripos($game['images'], 'users/'.$name.'/img/'.$image.', ')===false)) {	
 				$image = 'users/'.$name.'/img/'.$image.', ';
 			} elseif (!(stripos($game['images'], ', users/'.$name.'/img/'.$image)===false)) {
@@ -316,6 +317,10 @@ class Catalog extends CI_Controller {
 		$this->load->helper('download');
 		$this->load->helper('bbcode');
 		$game = $this->Catalog_model->getGameDetails($id);
-		force_download(transliterate($game['title']).'.'.end(explode(".", $game['file'])), file_get_contents($game['file']));
+		$tmp_g = transliterate($game['title']);
+		$file = $game['file'];
+		$exp = explode('.', $file);
+		$f_ext = end($exp);
+		force_download($tmp_g.'.'.$f_ext, file_get_contents($file));
 	}
 }

@@ -10,7 +10,10 @@
 	foreach ($posts as $post) {
 		echo '<div id="forum_mtopic"><div id="forum_topic">Тема: '.$topic['title'].' || Дата: '.$post['time'];
 		$user = $this->ion_auth->user()->row();
-		if ($this->ion_auth->is_admin() || $post['author']==$user->username) {
+		if (isset($user)) {
+			$user = $user->username;
+		}
+		if ($this->ion_auth->is_admin() || $post['author']==$user) {
 			echo ' || <a href="'.base_url().'index.php/forum/edit/'.$post['id'].'"><img height="16" title="Редактировать" alt="Редактировать" src="'.base_url().'icon/pencil.png"></a>';
 		}
 		echo '</div>';

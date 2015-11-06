@@ -13,7 +13,7 @@ class Catalog_model extends CI_Model {
 		}
 		
 		public function getAllGames($num, $offset) {
-			//$this->db->order_by('id', 'RANDOM');
+			$this->db->order_by('id', 'DESC');
 			$query = $this->db->get_where('games', array('approved'=>'1'), $num, $offset);
 			$games = $query->result_array();
 			if (count($games) == 0) {
@@ -123,6 +123,7 @@ class Catalog_model extends CI_Model {
 		
 		public function update_images($id, $images) {
 			$this->db->set('images', 'CONCAT(images, ", ", "'.$images.'")', FALSE);
+			$this->db->where('id', $id);
 			return $this->db->update('games');
 		}
 		

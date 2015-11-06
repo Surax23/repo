@@ -4,8 +4,6 @@
 
 <div id="search">
 <?php
-	//print_r($param);
-	//echo '<br />';
 	echo form_open('catalog/search');
 	
 ?>

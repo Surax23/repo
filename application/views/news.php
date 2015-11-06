@@ -11,13 +11,13 @@
 		}
 		else {
 			foreach ($news as $new) {
-				echo "<h3>".$new['title']."</h3>>> ".$new['date']." || ".$new['author'];
+				echo '<div id="news_item"><h3>'.$new['title'].'</h3>>> '.$new['date'].' || '.$new['author'];
 				if ( $this->ion_auth->is_admin() ) {
 					echo ' || ';
 					echo '<a href="'.base_url().'index.php/news/edit/'.$new['id'].'"><img height="16" title="Редактировать" alt="Редактировать" src="'.base_url().'icon/pencil.png"></a> ';
 					echo '<a href="'.base_url().'index.php/news/delete/'.$new['id'].'"><img height="16" title="Удалить" alt="Удалить" src="'.base_url().'icon/delete.png"></a>';
 				}
-				echo "<p>".$new['text']."</p>";
+				echo "<p>".$new['text']."</p></div>";
 			}
 		}
 	
